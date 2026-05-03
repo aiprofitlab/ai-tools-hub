@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AINAV // AI工具索引站</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;700&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:   #08090a;
+  --dark:    #0e1012;
+  --panel:   #13161a;
+  --panel2:  #191d22;
+  --line:    #252a31;
+  --line2:   #2e343d;
+  --amber:   #f5a623;
+  --amber2:  #e8920e;
+  --amber-d: rgba(245,166,35,0.08);
+  --amber-d2:rgba(245,166,35,0.14);
+  --green:   #39d353;
+  --blue:    #58a6ff;
+  --red:     #f85149;
+  --purple:  #bc8cff;
+  --muted:   #a0aab4;
+  --dim:     #525d6a;
+  --text:    #d8dde3;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  /* Grid background texture */
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ═══════════════════════════════════
+   HEADER
+═══════════════════════════════════ */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: rgba(8,9,10,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+  padding: 0 24px;
+  height: 52px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logo-box {
+  width: 28px; height: 28px;
+  border: 1.5px solid var(--amber);
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.logo-box::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: var(--amber);
+  opacity: 0.2;
+}
+
+.logo-box span {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--amber);
+  letter-spacing: -0.5px;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-name {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.06em;
+}
+
+.logo-name em {
+  color: var(--amber);
+  font-style: normal;
+}
+
+/* Search */
+.search-wrap {
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.search-inner {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line2);
+  background: var(--panel);
+  height: 34px;
+  transition: border-color 0.15s;
+}
+
+.search-inner:focus-within {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px rgba(245,166,35,0.08);
+}
+
+.search-prefix {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--amber);
+  padding: 0 10px;
+  white-space: nowrap;
+  border-right: 1px solid var(--line);
+}
+
+.search-inner input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 0 12px;
+}
+
+.search-inner input::placeholder {
+  color: var(--dim);
+}
+
+.search-btn {
+  height: 100%;
+  padding: 0 14px;
+  background: none;
+  border: none;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.05em;
+}
+
+.search-btn:hover { color: var(--amber); background: var(--amber-d); }
+
+/* Header right */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.hbtn {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  padding: 6px 14px;
+  border: 1px solid var(--line2);
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.hbtn:hover { color: var(--text); border-color: var(--dim); }
+
+.hbtn.primary {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.hbtn.primary:hover {
+  background: var(--amber);
+  color: var(--black);
+}
+
+/* ═══════════════════════════════════
+   STATUS BAR
+═══════════════════════════════════ */
+.status-bar {
+  border-bottom: 1px solid var(--line);
+  padding: 0 24px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  background: var(--dark);
+}
+
+.status-bar::-webkit-scrollbar { display: none; }
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 20px;
+  border-right: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  white-space: nowrap;
+  height: 100%;
+}
+
+.status-item:first-child { padding-left: 0; }
+
+.status-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.status-val {
+  color: var(--amber);
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════
+   HERO AD — 頂部廣告位
+═══════════════════════════════════ */
+.hero-ad {
+  margin: 24px 24px 0;
+  border: 1px solid var(--line2);
+  border-left: 3px solid var(--amber);
+  background: var(--panel);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-ad::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 200px; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(245,166,35,0.04));
+  pointer-events: none;
+}
+
+.ad-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--dim);
+  border: 1px solid var(--line2);
+  padding: 2px 6px;
+  margin-bottom: 6px;
+  display: inline-block;
+}
+
+.hero-ad h2 {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.hero-ad p {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.ad-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.ad-pill {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--amber);
+  border: 1px solid rgba(245,166,35,0.3);
+  padding: 3px 10px;
+}
+
+.ad-cta {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  background: var(--amber);
+  color: var(--black);
+  border: none;
+  padding: 8px 18px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: opacity 0.15s;
+}
+
+.ad-cta:hover { opacity: 0.85; }
+
+/* ═══════════════════════════════════
+   LAYOUT
+═══════════════════════════════════ */
+.layout {
+  display: grid;
+  grid-template-columns: 200px 1fr 240px;
+  min-height: calc(100vh - 84px);
+}
+
+/* ═══════════════════════════════════
+   LEFT NAV
+═══════════════════════════════════ */
+.left-nav {
+  border-right: 1px solid var(--line);
+  padding: 20px 0;
+  position: sticky;
+  top: 52px;
+  height: calc(100vh - 52px);
+  overflow-y: auto;
+  background: var(--dark);
+}
+
+.left-nav::-webkit-scrollbar { width: 3px; }
+.left-nav::-webkit-scrollbar-thumb { background: var(--line2); }
+
+.nav-section { margin-bottom: 24px; }
+
+.nav-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--dim);
+  padding: 0 16px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  cursor: pointer;
+  transition: all 0.12s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  text-decoration: none;
+  position: relative;
+}
+
+.nav-item::before {
+  content: '';
+  width: 3px;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  background: transparent;
+  transition: background 0.12s;
+}
+
+.nav-item:hover::before { background: var(--line2); }
+.nav-item.active::before { background: var(--amber); }
+
+.nav-icon {
+  width: 40px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.nav-text {
+  flex: 1;
+  padding: 8px 0;
+}
+
+.nav-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  display: block;
+  transition: color 0.12s;
+}
+
+.nav-item:hover .nav-name,
+.nav-item.active .nav-name { color: var(--text); }
+
+.nav-item.active .nav-name { color: var(--amber); }
+
+.nav-count {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--dim);
+  padding-right: 16px;
+}
+
+/* ═══════════════════════════════════
+   MAIN
+═══════════════════════════════════ */
+main {
+  padding: 24px;
+  border-right: 1px solid var(--line);
+}
+
+/* Section */
+.section { margin-bottom: 40px; }
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-id {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+  width: 32px;
+}
+
+.section-label-wrap {  }
+
+.section-title {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 0.04em;
+}
+
+.section-title .accent { color: var(--amber); }
+
+.section-sub {
+  font-size: 11px;
+  color: var(--dim);
+  margin-top: 1px;
+}
+
+.see-all {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  padding: 4px 12px;
+  letter-spacing: 0.04em;
+  transition: all 0.12s;
+}
+
+.see-all:hover { color: var(--amber); border-color: var(--amber2); }
+
+/* Filter chips */
+.chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.chip {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 4px 12px;
+  border: 1px solid var(--line2);
+  background: none;
+  color: var(--dim);
+  cursor: pointer;
+  transition: all 0.12s;
+  letter-spacing: 0.04em;
+}
+
+.chip:hover { color: var(--text); border-color: var(--dim); }
+
+.chip.on {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: var(--amber-d);
+}
+
+/* ═══════════════════════════════════
+   TOOL CARDS
+═══════════════════════════════════ */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-bottom: 0;
+}
+
+.card {
+  background: var(--panel);
+  padding: 16px;
+  text-decoration: none;
+  display: block;
+  transition: background 0.12s;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover { background: var(--panel2); }
+
+.card::after {
+  content: attr(data-num);
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--line2);
+}
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.card-icon {
+  width: 36px; height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  border: 1px solid var(--line2);
+  background: var(--dark);
+  flex-shrink: 0;
+}
+
+.badge {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border: 1px solid;
+}
+
+.badge-hot  { color: #f85149; border-color: rgba(248,81,73,0.3); background: rgba(248,81,73,0.07); }
+.badge-new  { color: #39d353; border-color: rgba(57,211,83,0.3);  background: rgba(57,211,83,0.07);  }
+.badge-pro  { color: #bc8cff; border-color: rgba(188,140,255,0.3);background: rgba(188,140,255,0.07);}
+.badge-free { color: #58a6ff; border-color: rgba(88,166,255,0.3); background: rgba(88,166,255,0.07); }
+
+.card-name {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 5px;
+  letter-spacing: 0.02em;
+}
+
+.card-desc {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-footer {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--dim);
+  border: 1px solid var(--line);
+  padding: 2px 6px;
+  letter-spacing: 0.04em;
+}
+
+/* ═══════════════════════════════════
+   INLINE AD — 中部廣告位
+═══════════════════════════════════ */
+.inline-ad {
+  border: 1px solid var(--line2);
+  border-top: 2px solid var(--amber);
+  background: var(--dark);
+  padding: 16px 20px;
+  margin: 32px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.inline-ad-left { }
+.inline-ad .ad-tag { margin-bottom: 5px; }
+.inline-ad h3 {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.inline-ad p {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.inline-ad-cta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  padding: 8px 18px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.inline-ad-cta:hover {
+  background: var(--amber);
+  color: var(--black);
+}
+
+/* ═══════════════════════════════════
+   RIGHT PANEL
+═══════════════════════════════════ */
+.right-panel {
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: sticky;
+  top: 52px;
+  height: calc(100vh - 52px);
+  overflow-y: auto;
+  background: var(--dark);
+}
+
+.right-panel::-webkit-scrollbar { width: 3px; }
+.right-panel::-webkit-scrollbar-thumb { background: var(--line2); }
+
+.widget { }
+
+.widget-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--dim);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.widget-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* 側欄廣告位 */
+.sidebar-ad {
+  border: 1px solid var(--line2);
+  border-left: 2px solid var(--purple);
+  background: var(--panel);
+  padding: 16px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.sidebar-ad .ad-icon {
+  width: 40px; height: 40px;
+  background: rgba(188,140,255,0.1);
+  border: 1px solid rgba(188,140,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.sidebar-ad h4 {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.sidebar-ad p {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.sidebar-ad a {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--purple);
+  border: 1px solid rgba(188,140,255,0.3);
+  padding: 6px 14px;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: all 0.15s;
+  display: inline-block;
+}
+
+.sidebar-ad a:hover {
+  background: rgba(188,140,255,0.1);
+}
+
+.sidebar-ad-sm {
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--blue);
+  background: var(--panel);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sidebar-ad-sm-text h5 {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.sidebar-ad-sm-text p {
+  font-size: 10px;
+  color: var(--dim);
+}
+
+.sidebar-ad-sm a {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--blue);
+  border: 1px solid rgba(88,166,255,0.3);
+  padding: 4px 10px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.sidebar-ad-sm a:hover { background: rgba(88,166,255,0.1); }
+
+/* Trending */
+.trending { display: flex; flex-direction: column; }
+
+.trend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  transition: all 0.12s;
+}
+
+.trend-item:last-child { border-bottom: none; }
+.trend-item:hover .trend-name { color: var(--amber); }
+
+.trend-rank {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--line2);
+  width: 18px;
+  flex-shrink: 0;
+}
+
+.trend-icon {
+  width: 28px; height: 28px;
+  border: 1px solid var(--line2);
+  background: var(--panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.trend-info { flex: 1; min-width: 0; }
+
+.trend-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.12s;
+}
+
+.trend-cat {
+  font-size: 10px;
+  color: var(--dim);
+}
+
+.trend-arrow {
+  font-size: 10px;
+  color: var(--green);
+  flex-shrink: 0;
+}
+
+/* Tags */
+.tags-cloud { display: flex; flex-wrap: wrap; gap: 5px; }
+
+.tc {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 4px 9px;
+  border: 1px solid var(--line);
+  color: var(--dim);
+  cursor: pointer;
+  transition: all 0.12s;
+  letter-spacing: 0.03em;
+}
+
+.tc:hover { border-color: var(--amber); color: var(--amber); }
+
+/* ═══════════════════════════════════
+   FOOTER
+═══════════════════════════════════ */
+footer {
+  border-top: 1px solid var(--line);
+  background: var(--dark);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.footer-brand {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--dim);
+}
+
+.footer-brand span { color: var(--amber); }
+
+.footer-links {
+  display: flex;
+  gap: 0;
+}
+
+.footer-links a {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  text-decoration: none;
+  padding: 4px 14px;
+  border-left: 1px solid var(--line);
+  transition: color 0.12s;
+}
+
+.footer-links a:last-child { border-right: 1px solid var(--line); }
+.footer-links a:hover { color: var(--amber); }
+
+.footer-copy {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+}
+
+/* ═══════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.section {
+  animation: fadeUp 0.3s ease both;
+}
+
+.section:nth-child(1) { animation-delay: 0.05s; }
+.section:nth-child(2) { animation-delay: 0.1s; }
+.section:nth-child(3) { animation-delay: 0.15s; }
+.section:nth-child(4) { animation-delay: 0.2s; }
+
+/* ═══════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════ */
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 180px 1fr; }
+  .right-panel { display: none; }
+}
+
+@media (max-width: 720px) {
+  .layout { grid-template-columns: 1fr; }
+  .left-nav { display: none; }
+  header { grid-template-columns: auto 1fr; padding: 0 16px; }
+  .header-right { display: none; }
+  main { padding: 16px; }
+  .hero-ad { margin: 16px 16px 0; flex-direction: column; gap: 12px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════ HEADER ════════════ -->
+<header>
+  <a class="logo" href="#">
+    <div class="logo-box"><span>AI</span></div>
+    <span class="logo-name">AIN<em>AV</em></span>
+  </a>
+
+  <div class="search-wrap">
+    <div class="search-inner">
+      <span class="search-prefix">SEARCH://</span>
+      <input type="text" id="searchInput" placeholder="搜尋 AI 工具、分類、功能...">
+      <button class="search-btn" onclick="doSearch()">EXEC</button>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <a class="hbtn" href="#">排行榜</a>
+    <a class="hbtn" href="#">最新</a>
+    <a class="hbtn primary" href="#">+ 提交</a>
+  </div>
+</header>
+
+<!-- ════════════ STATUS BAR ════════════ -->
+<div class="status-bar">
+  <div class="status-item">
+    <span class="status-dot"></span>
+    <span>系統正常</span>
+  </div>
+  <div class="status-item">工具總數 <span class="status-val">217</span></div>
+  <div class="status-item">本週新增 <span class="status-val">14</span></div>
+  <div class="status-item">分類 <span class="status-val">8</span></div>
+  <div class="status-item">更新時間 <span class="status-val">2025-05-03</span></div>
+  <div class="status-item" style="margin-left:auto; border-left:1px solid var(--line); border-right:none;">v2.1.0</div>
+</div>
+
+<!-- ════════════ HERO AD ════════════ -->
+<!-- 廣告位 #1：頂部橫幅 ── 替換此區塊內容以投放廣告 -->
+<div class="hero-ad" id="ad-hero">
+  <div>
+    <span class="ad-tag">SPONSORED // AD_SLOT_01</span>
+    <h2>在這裡展示您的 AI 產品或服務</h2>
+    <p>觸達精準 AI 用戶群體 · 頂部黃金橫幅廣告位 · 高曝光率 · 聯繫我們投放</p>
+  </div>
+  <div class="ad-actions">
+    <span class="ad-pill">HEAD_BANNER</span>
+    <a class="ad-cta" href="#">立即投放 →</a>
+  </div>
+</div>
+
+<!-- ════════════ LAYOUT ════════════ -->
+<div class="layout">
+
+  <!-- ── LEFT NAV ── -->
+  <nav class="left-nav">
+    <div class="nav-section">
+      <div class="nav-label">CATEGORIES</div>
+      <a class="nav-item active" href="#" onclick="setActive(this)">
+        <div class="nav-icon">◈</div>
+        <div class="nav-text">
+          <span class="nav-name">全部工具</span>
+        </div>
+        <span class="nav-count">217</span>
+      </a>
+      <a class="nav-item" href="#llm" onclick="setActive(this)">
+        <div class="nav-icon">◉</div>
+        <div class="nav-text">
+          <span class="nav-name">大語言模型</span>
+        </div>
+        <span class="nav-count">38</span>
+      </a>
+      <a class="nav-item" href="#image" onclick="setActive(this)">
+        <div class="nav-icon">◈</div>
+        <div class="nav-text">
+          <span class="nav-name">AI 繪圖</span>
+        </div>
+        <span class="nav-count">45</span>
+      </a>
+      <a class="nav-item" href="#code" onclick="setActive(this)">
+        <div class="nav-icon">◇</div>
+        <div class="nav-text">
+          <span class="nav-name">AI 編程</span>
+        </div>
+        <span class="nav-count">29</span>
+      </a>
+      <a class="nav-item" href="#video" onclick="setActive(this)">
+        <div class="nav-icon">▷</div>
+        <div class="nav-text">
+          <span class="nav-name">視頻生成</span>
+        </div>
+        <span class="nav-count">24</span>
+      </a>
+      <a class="nav-item" href="#audio" onclick="setActive(this)">
+        <div class="nav-icon">♫</div>
+        <div class="nav-text">
+          <span class="nav-name">語音音頻</span>
+        </div>
+        <span class="nav-count">18</span>
+      </a>
+      <a class="nav-item" href="#write" onclick="setActive(this)">
+        <div class="nav-icon">✎</div>
+        <div class="nav-text">
+          <span class="nav-name">AI 寫作</span>
+        </div>
+        <span class="nav-count">32</span>
+      </a>
+      <a class="nav-item" href="#office" onclick="setActive(this)">
+        <div class="nav-icon">⊞</div>
+        <div class="nav-text">
+          <span class="nav-name">辦公效率</span>
+        </div>
+        <span class="nav-count">31</span>
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">FILTERS</div>
+      <a class="nav-item" href="#">
+        <div class="nav-icon" style="font-size:11px;color:var(--red)">HOT</div>
+        <div class="nav-text"><span class="nav-name">熱門工具</span></div>
+      </a>
+      <a class="nav-item" href="#">
+        <div class="nav-icon" style="font-size:11px;color:var(--green)">NEW</div>
+        <div class="nav-text"><span class="nav-name">本週新增</span></div>
+      </a>
+      <a class="nav-item" href="#">
+        <div class="nav-icon" style="font-size:11px;color:var(--blue)">FREE</div>
+        <div class="nav-text"><span class="nav-name">免費工具</span></div>
+      </a>
+      <a class="nav-item" href="#">
+        <div class="nav-icon" style="font-size:11px;color:var(--muted)">ZH</div>
+        <div class="nav-text"><span class="nav-name">支援中文</span></div>
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">RESOURCES</div>
+      <a class="nav-item" href="#">
+        <div class="nav-icon">◎</div>
+        <div class="nav-text"><span class="nav-name">AI 教學</span></div>
+      </a>
+      <a class="nav-item" href="#">
+        <div class="nav-icon">◈</div>
+        <div class="nav-text"><span class="nav-name">使用指南</span></div>
+      </a>
+      <a class="nav-item" href="#">
+        <div class="nav-icon">◉</div>
+        <div class="nav-text"><span class="nav-name">社群討論</span></div>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main id="mainContent">
+
+    <!-- Filter chips -->
+    <div class="chips">
+      <button class="chip on" onclick="chipClick(this)">ALL</button>
+      <button class="chip" onclick="chipClick(this)">HOT 🔥</button>
+      <button class="chip" onclick="chipClick(this)">NEW ✦</button>
+      <button class="chip" onclick="chipClick(this)">FREE</button>
+      <button class="chip" onclick="chipClick(this)">PAID</button>
+      <button class="chip" onclick="chipClick(this)">中文</button>
+      <button class="chip" onclick="chipClick(this)">API</button>
+      <button class="chip" onclick="chipClick(this)">開源</button>
+    </div>
+
+    <!-- ╔══ SECTION 01: LLM ══╗ -->
+    <div class="section" id="llm">
+      <div class="section-head">
+        <div class="section-left">
+          <span class="section-id">01 //</span>
+          <div class="section-label-wrap">
+            <div class="section-title"><span class="accent">LLM</span> 大語言模型</div>
+            <div class="section-sub">對話 · 推理 · 多模態 · 知識問答</div>
+          </div>
+        </div>
+        <a class="see-all" href="#">VIEW_ALL →</a>
+      </div>
+
+      <div class="grid" id="llm-grid">
+        <a class="card" href="https://claude.ai" target="_blank" data-num="001">
+          <div class="card-top">
+            <div class="card-icon">🧠</div>
+            <span class="badge badge-hot">HOT</span>
+          </div>
+          <div class="card-name">Claude</div>
+          <div class="card-desc">Anthropic 出品，長上下文、安全對齊，擅長分析與程式任務</div>
+          <div class="card-footer">
+            <span class="tag">對話</span><span class="tag">推理</span>
+          </div>
+        </a>
+        <a class="card" href="https://chat.openai.com" target="_blank" data-num="002">
+          <div class="card-top">
+            <div class="card-icon">⚡</div>
+            <span class="badge badge-hot">HOT</span>
+          </div>
+          <div class="card-name">ChatGPT</div>
+          <div class="card-desc">OpenAI 旗艦，GPT-4o 多模態，插件生態豐富</div>
+          <div class="card-footer">
+            <span class="tag">多模態</span><span class="tag">插件</span>
+          </div>
+        </a>
+        <a class="card" href="https://gemini.google.com" target="_blank" data-num="003">
+          <div class="card-top">
+            <div class="card-icon">💎</div>
+            <span class="badge badge-new">NEW</span>
+          </div>
+          <div class="card-name">Gemini 2.5</div>
+          <div class="card-desc">Google DeepMind，百萬 Token 超長上下文，深度整合 Google</div>
+          <div class="card-footer">
+            <span class="tag">多模態</span><span class="tag">長文本</span>
+          </div>
+        </a>
+        <a class="card" href="https://www.deepseek.com" target="_blank" data-num="004">
+          <div class="card-top">
+            <div class="card-icon">🔬</div>
+            <span class="badge badge-hot">HOT</span>
+          </div>
+          <div class="card-name">DeepSeek</div>
+          <div class="card-desc">國產高性能推理模型，開源友好，數學與程式能力頂尖</div>
+          <div class="card-footer">
+            <span class="tag">開源</span><span class="tag">推理</span>
+          </div>
+        </a>
+        <a class="card" href="https://www.kimi.ai" target="_blank" data-num="005">
+          <div class="card-top">
+            <div class="card-icon">🌙</div>
+            <span class="badge badge-free">FREE</span>
+          </div>
+          <div class="card-name">Kimi</div>
+          <div class="card-desc">月之暗面，超長文本理解，中文優化，支援大檔案解讀</div>
+          <div class="card-footer">
+            <span class="tag">中文</span><span class="tag">長文本</span>
+          </div>
+        </a>
+        <a class="card" href="https://www.doubao.com" target="_blank" data-num="006">
+          <div class="card-top">
+            <div class="card-icon">🫘</div>
+            <span class="badge badge-free">FREE</span>
+          </div>
+          <div class="card-name">豆包</div>
+          <div class="card-desc">字節跳動出品，完全免費，中文流暢，響應速度快</div>
+          <div class="card-footer">
+            <span class="tag">中文</span><span class="tag">免費</span>
+          </div>
+        </a>
+        <a class="card" href="https://www.perplexity.ai" target="_blank" data-num="007">
+          <div class="card-top">
+            <div class="card-icon">🔍</div>
+            <span class="badge badge-hot">HOT</span>
+          </div>
+          <div class="card-name">Perplexity</div>
+          <div class="card-desc">AI 搜尋引擎，即時網路搜索，引用來源透明，研究首選</div>
+          <div class="card-footer">
+            <span class="tag">搜尋</span><span class="tag">即時</span>
+          </div>
+        </a>
+        <a class="card" href="https://grok.x.ai" target="_blank" data-num="008">
+          <div class="card-top">
+            <div class="card-icon">🐦</div>
+            <span class="badge badge-new">NEW</span>
+          </div>
+          <div class="card-name">Grok 3</div>
+          <div class="card-desc">xAI 出品，即時 X 平台資料，幽默風格，推理能力強</div>
+          <div class="card-footer">
+            <span class="tag">即時</span><span class="tag">推理</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ╔══ SECTION 02: 繪圖 ══╗ -->
+    <div class="section" id="image">
+      <div class="section-head">
+        <div class="section-left">
+          <span class="section-id">02 //</span>
+          <div class="section-label-wrap">
+            <div class="section-title"><span class="accent">IMG</span> AI 繪圖</div>
+            <div class="section-sub">文生圖 · 圖像編輯 · 風格生成</div>
+          </div>
+        </div>
+        <a class="see-all" href="#">VIEW_ALL →</a>
+      </div>
+
+      <div class="grid">
+        <a class="card" href="https://www.midjourney.com" target="_blank" data-num="009">
+          <div class="card-top"><div class="card-icon">🖌️</div><span class="badge badge-hot">HOT</span></div>
+          <div class="card-name">Midjourney</div>
+          <div class="card-desc">藝術質量最高，風格多樣，商業設計首選，$10/月起</div>
+          <div class="card-footer"><span class="tag">文生圖</span><span class="tag">高質量</span></div>
+        </a>
+        <a class="card" href="https://stability.ai" target="_blank" data-num="010">
+          <div class="card-top"><div class="card-icon">⚙️</div><span class="badge badge-free">FREE</span></div>
+          <div class="card-name">Stable Diffusion</div>
+          <div class="card-desc">開源圖像生成，可本地部署，高度客製化，完全免費</div>
+          <div class="card-footer"><span class="tag">開源</span><span class="tag">本地</span></div>
+        </a>
+        <a class="card" href="https://firefly.adobe.com" target="_blank" data-num="011">
+          <div class="card-top"><div class="card-icon">✨</div><span class="badge badge-pro">PRO</span></div>
+          <div class="card-name">Adobe Firefly</div>
+          <div class="card-desc">商業版權最安全，基於授權圖庫訓練，無縫整合 PS</div>
+          <div class="card-footer"><span class="tag">商業</span><span class="tag">版權</span></div>
+        </a>
+        <a class="card" href="https://ideogram.ai" target="_blank" data-num="012">
+          <div class="card-top"><div class="card-icon">🔤</div><span class="badge badge-new">NEW</span></div>
+          <div class="card-name">Ideogram 2</div>
+          <div class="card-desc">文字渲染最準確的 AI 繪圖工具，字型設計必備</div>
+          <div class="card-footer"><span class="tag">文字</span><span class="tag">設計</span></div>
+        </a>
+        <a class="card" href="https://leonardo.ai" target="_blank" data-num="013">
+          <div class="card-top"><div class="card-icon">🎨</div><span class="badge badge-free">FREE</span></div>
+          <div class="card-name">Leonardo AI</div>
+          <div class="card-desc">免費額度最多，遊戲風格強，提供大量免費生成次數</div>
+          <div class="card-footer"><span class="tag">免費</span><span class="tag">遊戲</span></div>
+        </a>
+        <a class="card" href="https://www.canva.com" target="_blank" data-num="014">
+          <div class="card-top"><div class="card-icon">🎭</div><span class="badge badge-free">FREE</span></div>
+          <div class="card-name">Canva AI</div>
+          <div class="card-desc">非設計師首選，豐富模板，AI 生成與設計工具一體化</div>
+          <div class="card-footer"><span class="tag">設計</span><span class="tag">模板</span></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ╔══ INLINE AD ══╗ -->
+    <!-- 廣告位 #2：內容中部廣告 ── 替換此區塊投放廣告 -->
+    <div class="inline-ad" id="ad-inline">
+      <div class="inline-ad-left">
+        <span class="ad-tag">SPONSORED // AD_SLOT_02</span>
+        <h3>▸ 內容中部廣告位 — 高意向用戶黃金曝光</h3>
+        <p>位於核心內容區域，用戶瀏覽意向最高的廣告位置 · 支援自定義圖片與連結</p>
+      </div>
+      <a class="inline-ad-cta" href="#">CONTACT →</a>
+    </div>
+
+    <!-- ╔══ SECTION 03: 編程 ══╗ -->
+    <div class="section" id="code">
+      <div class="section-head">
+        <div class="section-left">
+          <span class="section-id">03 //</span>
+          <div class="section-label-wrap">
+            <div class="section-title"><span class="accent">DEV</span> AI 編程</div>
+            <div class="section-sub">程式補全 · 除錯 · 全端開發</div>
+          </div>
+        </div>
+        <a class="see-all" href="#">VIEW_ALL →</a>
+      </div>
+      <div class="grid">
+        <a class="card" href="https://github.com/features/copilot" target="_blank" data-num="015">
+          <div class="card-top"><div class="card-icon">🐙</div><span class="badge badge-hot">HOT</span></div>
+          <div class="card-name">GitHub Copilot</div>
+          <div class="card-desc">IDE 內程式補全，多語言支援，深度 GitHub 整合，$10/月</div>
+          <div class="card-footer"><span class="tag">補全</span><span class="tag">IDE</span></div>
+        </a>
+        <a class="card" href="https://cursor.sh" target="_blank" data-num="016">
+          <div class="card-top"><div class="card-icon">🖱️</div><span class="badge badge-hot">HOT</span></div>
+          <div class="card-name">Cursor</div>
+          <div class="card-desc">AI 原生程式碼編輯器，對話式開發，全程式庫理解</div>
+          <div class="card-footer"><span class="tag">編輯器</span><span class="tag">對話</span></div>
+        </a>
+        <a class="card" href="https://bolt.new" target="_blank" data-num="017">
+          <div class="card-top"><div class="card-icon">⚡</div><span class="badge badge-new">NEW</span></div>
+          <div class="card-name">Bolt.new</div>
+          <div class="card-desc">自然語言全端開發，10 分鐘做出完整 Web 應用</div>
+          <div class="card-footer"><span class="tag">全端</span><span class="tag">快速</span></div>
+        </a>
+        <a class="card" href="https://v0.dev" target="_blank" data-num="018">
+          <div class="card-top"><div class="card-icon">∅</div><span class="badge badge-new">NEW</span></div>
+          <div class="card-name">v0.dev</div>
+          <div class="card-desc">Vercel 出品，AI 前端 UI 生成，React 組件一鍵生成</div>
+          <div class="card-footer"><span class="tag">前端</span><span class="tag">React</span></div>
+        </a>
+        <a class="card" href="https://www.replit.com" target="_blank" data-num="019">
+          <div class="card-top"><div class="card-icon">🔄</div><span class="badge badge-free">FREE</span></div>
+          <div class="card-name">Replit Agent</div>
+          <div class="card-desc">線上 IDE + AI，無需配置直接運行，協作開發部署一體</div>
+          <div class="card-footer"><span class="tag">線上</span><span class="tag">協作</span></div>
+        </a>
+        <a class="card" href="https://codeium.com/windsurf" target="_blank" data-num="020">
+          <div class="card-top"><div class="card-icon">🏄</div><span class="badge badge-free">FREE</span></div>
+          <div class="card-name">Windsurf</div>
+          <div class="card-desc">Codeium 推出，免費版功能強大，AI 程式 IDE 新銳</div>
+          <div class="card-footer"><span class="tag">免費</span><span class="tag">IDE</span></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ╔══ SECTION 04: 視頻 ══╗ -->
+    <div class="section" id="video">
+      <div class="section-head">
+        <div class="section-left">
+          <span class="section-id">04 //</span>
+          <div class="section-label-wrap">
+            <div class="section-title"><span class="accent">VID</span> 視頻生成</div>
+            <div class="section-sub">文生視頻 · 數字人 · 視頻編輯</div>
+          </div>
+        </div>
+        <a class="see-all" href="#">VIEW_ALL →</a>
+      </div>
+      <div class="grid">
+        <a class="card" href="https://sora.com" target="_blank" data-num="021">
+          <div class="card-top"><div class="card-icon">🌀</div><span class="badge badge-hot">HOT</span></div>
+          <div class="card-name">Sora</div>
+          <div class="card-desc">OpenAI 文生視頻，60秒高質量，物理仿真逼真</div>
+          <div class="card-footer"><span class="tag">文生視頻</span><span class="tag">長視頻</span></div>
+        </a>
+        <a class="card" href="https://runwayml.com" target="_blank" data-num="022">
+          <div class="card-top"><div class="card-icon">🎬</div><span class="badge badge-pro">PRO</span></div>
+          <div class="card-name">Runway Gen-3</div>
+          <div class="card-desc">專業級 AI 視頻工具，電影感強，多種編輯功能</div>
+          <div class="card-footer"><span class="tag">專業</span><span class="tag">電影</span></div>
+        </a>
+        <a class="card" href="https://www.heygen.com" target="_blank" data-num="023">
+          <div class="card-top"><div class="card-icon">🤖</div><span class="badge badge-hot">HOT</span></div>
+          <div class="card-name">HeyGen</div>
+          <div class="card-desc">AI 數字人，多語言配音，一鍵生成營銷視頻</div>
+          <div class="card-footer"><span class="tag">數字人</span><span class="tag">配音</span></div>
+        </a>
+        <a class="card" href="https://pika.art" target="_blank" data-num="024">
+          <div class="card-top"><div class="card-icon">✦</div><span class="badge badge-new">NEW</span></div>
+          <div class="card-name">Pika 2.2</div>
+          <div class="card-desc">新手友好，創意短片生成，動畫效果豐富</div>
+          <div class="card-footer"><span class="tag">短片</span><span class="tag">動畫</span></div>
+        </a>
+        <a class="card" href="https://hailuoai.com" target="_blank" data-num="025">
+          <div class="card-top"><div class="card-icon">🐋</div><span class="badge badge-free">FREE</span></div>
+          <div class="card-name">海螺 AI</div>
+          <div class="card-desc">MiniMax 出品，中文優化，每日免費額度，質量優秀</div>
+          <div class="card-footer"><span class="tag">中文</span><span class="tag">免費</span></div>
+        </a>
+        <a class="card" href="https://kling.kuaishou.com" target="_blank" data-num="026">
+          <div class="card-top"><div class="card-icon">🎞️</div><span class="badge badge-hot">HOT</span></div>
+          <div class="card-name">可靈 AI</div>
+          <div class="card-desc">快手出品，國產最強視頻生成，每日免費可用</div>
+          <div class="card-footer"><span class="tag">國產</span><span class="tag">免費</span></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ╔══ SECTION 05: 辦公 ══╗ -->
+    <div class="section" id="office">
+      <div class="section-head">
+        <div class="section-left">
+          <span class="section-id">05 //</span>
+          <div class="section-label-wrap">
+            <div class="section-title"><span class="accent">BIZ</span> 辦公效率</div>
+            <div class="section-sub">PPT · 自動化 · 會議記錄 · 資料分析</div>
+          </div>
+        </div>
+        <a class="see-all" href="#">VIEW_ALL →</a>
+      </div>
+      <div class="grid">
+        <a class="card" href="https://gamma.app" target="_blank" data-num="027">
+          <div class="card-top"><div class="card-icon">📊</div><span class="badge badge-hot">HOT</span></div>
+          <div class="card-name">Gamma</div>
+          <div class="card-desc">AI 生成簡報，10 分鐘做出專業 PPT，模板精美</div>
+          <div class="card-footer"><span class="tag">PPT</span><span class="tag">簡報</span></div>
+        </a>
+        <a class="card" href="https://otter.ai" target="_blank" data-num="028">
+          <div class="card-top"><div class="card-icon">🎙️</div><span class="badge badge-free">FREE</span></div>
+          <div class="card-name">Otter.ai</div>
+          <div class="card-desc">會議實時轉錄，自動識別發言人，生成摘要與行動項</div>
+          <div class="card-footer"><span class="tag">會議</span><span class="tag">轉錄</span></div>
+        </a>
+        <a class="card" href="https://make.com" target="_blank" data-num="029">
+          <div class="card-top"><div class="card-icon">⚙️</div><span class="badge badge-pro">PRO</span></div>
+          <div class="card-name">Make.com</div>
+          <div class="card-desc">零代碼 AI 自動化，串聯所有工具，構建業務流程</div>
+          <div class="card-footer"><span class="tag">自動化</span><span class="tag">流程</span></div>
+        </a>
+        <a class="card" href="https://www.notion.so/product/ai" target="_blank" data-num="030">
+          <div class="card-top"><div class="card-icon">📝</div><span class="badge badge-pro">PRO</span></div>
+          <div class="card-name">Notion AI</div>
+          <div class="card-desc">筆記+AI 一體，知識管理、AI 寫作、項目管理全包</div>
+          <div class="card-footer"><span class="tag">筆記</span><span class="tag">知識庫</span></div>
+        </a>
+        <a class="card" href="https://copilot.microsoft.com" target="_blank" data-num="031">
+          <div class="card-top"><div class="card-icon">🪟</div><span class="badge badge-pro">PRO</span></div>
+          <div class="card-name">微軟 Copilot</div>
+          <div class="card-desc">Office 全家桶 AI 化，Word/Excel/PPT 智能助手</div>
+          <div class="card-footer"><span class="tag">Office</span><span class="tag">企業</span></div>
+        </a>
+        <a class="card" href="https://zapier.com" target="_blank" data-num="032">
+          <div class="card-top"><div class="card-icon">⚡</div><span class="badge badge-free">FREE</span></div>
+          <div class="card-name">Zapier AI</div>
+          <div class="card-desc">AI 工作流自動化，連接 6000+ 應用，免費版可用</div>
+          <div class="card-footer"><span class="tag">自動化</span><span class="tag">整合</span></div>
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── RIGHT PANEL ── -->
+  <aside class="right-panel">
+
+    <!-- 廣告位 #3：側欄主廣告 ── 替換內容投放廣告 -->
+    <div class="widget">
+      <div class="widget-label">SPONSORED</div>
+      <div class="sidebar-ad" id="ad-sidebar-1">
+        <span class="ad-tag">AD_SLOT_03</span>
+        <div class="ad-icon">💼</div>
+        <h4>側欄廣告位</h4>
+        <p>觸達高意向 AI 工具用戶，適合 SaaS 產品與 API 服務推廣</p>
+        <a href="#">了解投放 →</a>
+      </div>
+    </div>
+
+    <!-- Trending -->
+    <div class="widget">
+      <div class="widget-label">TRENDING</div>
+      <div class="trending">
+        <a class="trend-item" href="https://www.perplexity.ai" target="_blank">
+          <span class="trend-rank">01</span>
+          <div class="trend-icon">🔍</div>
+          <div class="trend-info">
+            <div class="trend-name">Perplexity AI</div>
+            <div class="trend-cat">AI 搜尋引擎</div>
+          </div>
+          <span class="trend-arrow">↑</span>
+        </a>
+        <a class="trend-item" href="https://bolt.new" target="_blank">
+          <span class="trend-rank">02</span>
+          <div class="trend-icon">⚡</div>
+          <div class="trend-info">
+            <div class="trend-name">Bolt.new</div>
+            <div class="trend-cat">AI 全端開發</div>
+          </div>
+          <span class="trend-arrow">↑</span>
+        </a>
+        <a class="trend-item" href="https://elevenlabs.io" target="_blank">
+          <span class="trend-rank">03</span>
+          <div class="trend-icon">🎙️</div>
+          <div class="trend-info">
+            <div class="trend-name">ElevenLabs</div>
+            <div class="trend-cat">AI 語音克隆</div>
+          </div>
+          <span class="trend-arrow">↑</span>
+        </a>
+        <a class="trend-item" href="https://cursor.sh" target="_blank">
+          <span class="trend-rank">04</span>
+          <div class="trend-icon">🖱️</div>
+          <div class="trend-info">
+            <div class="trend-name">Cursor</div>
+            <div class="trend-cat">AI 程式編輯器</div>
+          </div>
+          <span class="trend-arrow">↑</span>
+        </a>
+        <a class="trend-item" href="https://www.heygen.com" target="_blank">
+          <span class="trend-rank">05</span>
+          <div class="trend-icon">🤖</div>
+          <div class="trend-info">
+            <div class="trend-name">HeyGen</div>
+            <div class="trend-cat">AI 數字人</div>
+          </div>
+          <span class="trend-arrow">↑</span>
+        </a>
+        <a class="trend-item" href="https://gamma.app" target="_blank">
+          <span class="trend-rank">06</span>
+          <div class="trend-icon">📊</div>
+          <div class="trend-info">
+            <div class="trend-name">Gamma</div>
+            <div class="trend-cat">AI 簡報生成</div>
+          </div>
+          <span class="trend-arrow">↑</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div class="widget">
+      <div class="widget-label">TAGS</div>
+      <div class="tags-cloud">
+        <span class="tc">文生圖</span>
+        <span class="tc">開源</span>
+        <span class="tc">中文</span>
+        <span class="tc">免費</span>
+        <span class="tc">多模態</span>
+        <span class="tc">API</span>
+        <span class="tc">本地</span>
+        <span class="tc">Agent</span>
+        <span class="tc">RAG</span>
+        <span class="tc">語音</span>
+        <span class="tc">視頻</span>
+        <span class="tc">自動化</span>
+      </div>
+    </div>
+
+    <!-- 廣告位 #4：側欄底部小廣告 ── 替換內容投放廣告 -->
+    <div class="widget">
+      <div class="widget-label">SPONSORED</div>
+      <div class="sidebar-ad-sm" id="ad-sidebar-2">
+        <div class="sidebar-ad-sm-text">
+          <h5>側欄底部廣告</h5>
+          <p>AD_SLOT_04 · 聯繫投放</p>
+        </div>
+        <a href="#">投放 →</a>
+      </div>
+    </div>
+
+  </aside>
+
+</div>
+
+<!-- ════════════ FOOTER ════════════ -->
+<footer>
+  <div class="footer-brand">
+    <span>AINAV</span> // AI 工具索引站 · 收錄全球優質 AI 應用
+  </div>
+  <div class="footer-links">
+    <a href="#">關於</a>
+    <a href="#">提交工具</a>
+    <a href="#">廣告合作</a>
+    <a href="#">隱私政策</a>
+  </div>
+  <div class="footer-copy">© 2025 AINAV · ALL RIGHTS RESERVED</div>
+</footer>
+
+<script>
+// ── Nav active state
+function setActive(el) {
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── Chip filter
+function chipClick(el) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// ── Search
+function doSearch() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  document.querySelectorAll('.card').forEach(card => {
+    const txt = card.textContent.toLowerCase();
+    card.style.opacity = (!q || txt.includes(q)) ? '1' : '0.2';
+  });
+}
+
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch();
+});
+
+document.getElementById('searchInput').addEventListener('input', function() {
+  if (!this.value.trim()) {
+    document.querySelectorAll('.card').forEach(c => c.style.opacity = '1');
+  }
+});
+
+// ── Card click tracking
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('click', function() {
+    const name = this.querySelector('.card-name')?.textContent;
+    console.log('[AINAV] click:', name);
+    // 接入 GA: gtag('event','tool_click',{tool_name: name})
+  });
+});
+
+// ── Keyboard shortcut: / to focus search
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+    e.preventDefault();
+    document.getElementById('searchInput').focus();
+  }
+});
+</script>
+</body>
+</html>
