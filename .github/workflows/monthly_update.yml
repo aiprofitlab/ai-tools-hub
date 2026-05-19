@@ -1,0 +1,96 @@
+name: 🤖 Monthly AI Tools Auto-Update
+
+on:
+  # 每月1號早上 9:00 UTC+8（即 01:00 UTC）自動執行
+  schedule:
+    - cron: '0 1 1 * *'
+  
+  # 也可以手動觸發（在 GitHub Actions 頁面點 Run workflow）
+  workflow_dispatch:
+    inputs:
+      force_update:
+        description: 'Force update even if no new tools found'
+        required: false
+        default: 'false'
+
+permissions:
+  contents: write  # 允許 push 回 repo
+
+jobs:
+  update-tools:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. 取得程式碼
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 2. 設定 Python
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 3. 執行自動更新腳本
+      - name: 🔍 Fetch new AI tools
+        run: |
+          echo "Starting auto-update at $(date)"
+          python scripts/auto_update.py
+          echo "Update completed"
+
+      # 4. 讀取更新摘要
+      - name: 📊 Read update summary
+        id: summary
+        run: |
+          if [ -f data/update_summary.txt ]; then
+            SUMMARY=$(cat data/update_summary.txt)
+            echo "summary=$SUMMARY" >> $GITHUB_OUTPUT
+          else
+            echo "summary=No changes" >> $GITHUB_OUTPUT
+          fi
+
+      # 5. 檢查是否有變更
+      - name: 🔍 Check for changes
+        id: changes
+        run: |
+          if git diff --quiet data/tools.json; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes to tools.json"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in tools.json"
+            git diff --stat data/tools.json
+          fi
+
+      # 6. 設定 Git 用戶
+      - name: ⚙️ Configure Git
+        if: steps.changes.outputs.changed == 'true' || github.event.inputs.force_update == 'true'
+        run: |
+          git config user.name "AINAV Bot"
+          git config user.email "ainav-bot@users.noreply.github.com"
+
+      # 7. Commit 並 Push 變更
+      - name: 💾 Commit and push updates
+        if: steps.changes.outputs.changed == 'true' || github.event.inputs.force_update == 'true'
+        run: |
+          git add data/tools.json data/update_summary.txt
+          DATE=$(date '+%Y-%m-%d')
+          SUMMARY="${{ steps.summary.outputs.summary }}"
+          git commit -m "🤖 Auto-update: $SUMMARY [$DATE]"
+          git push
+          echo "✅ Changes pushed successfully"
+
+      # 8. 沒有新工具時輸出提示
+      - name: ℹ️ No changes
+        if: steps.changes.outputs.changed == 'false' && github.event.inputs.force_update != 'true'
+        run: |
+          echo "No new AI tools found this week. Will try again next week."
+
+      # 9. 觸發 GitHub Pages 重新部署（如果用 Pages）
+      - name: 🚀 Trigger Pages rebuild
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          echo "Repository updated. GitHub Pages will auto-redeploy."
+          echo "Check deployment status at: https://github.com/${{ github.repository }}/deployments"
