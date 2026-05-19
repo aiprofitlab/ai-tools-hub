@@ -3,466 +3,398 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AINAV // AI工具導航</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>AINAV // AI工具導航站</title>
 <style>
-:root {
-  --bg:     #07080b;
-  --dark:   #0c0e14;
-  --panel:  #111420;
-  --panel2: #171b28;
-  --line:   #1c2133;
-  --line2:  #252d42;
-  --amber:  #f5a623;
-  --amber2: rgba(245,166,35,0.10);
-  --green:  #34d399;
-  --blue:   #60a5fa;
-  --red:    #f87171;
-  --purple: #a78bfa;
-  --pink:   #f472b6;
-  --cyan:   #22d3ee;
-  --text:   #dde3ed;
-  --muted:  #7a8799;
-  --dim:    #3a4558;
-  --mono:   'IBM Plex Mono', monospace;
-  --sans:   'DM Sans', sans-serif;
+:root{
+  --bg:#020612;--dark:#040a1e;--panel:#060d28;--panel2:#091335;
+  --line:#0d1e42;--line2:#132550;
+  --cyan:#00d9ff;--blue:#1e90ff;--purple:#7c4dff;
+  --green:#00ff88;--amber:#ffaa00;--red:#ff4466;--pink:#ff44cc;--teal:#00ffcc;
+  --text:#c8deff;--muted:#4a6a9a;--dim:#1e3060;
+  --fz:'KaiTi','楷体','標楷體',serif;
+  --fe:'Arial','Arial Black',sans-serif;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;min-height:100vh;overflow-x:hidden;}
+body{background:var(--bg);color:var(--text);font-family:var(--fz);font-weight:700;font-size:14px;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 15%,rgba(0,100,255,.15) 0%,transparent 55%),
+    radial-gradient(ellipse 60% 50% at 80% 85%,rgba(124,77,255,.12) 0%,transparent 50%),
+    linear-gradient(rgba(0,217,255,.016) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,217,255,.016) 1px,transparent 1px);
+  background-size:100% 100%,100% 100%,44px 44px,44px 44px;}
 
-/* ══ HEADER ══ */
-header{
-  position:sticky;top:0;z-index:300;
-  background:rgba(7,8,11,0.94);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--line);
-  height:54px;display:flex;align-items:center;padding:0 28px;gap:16px;
-}
+/* HEADER */
+header{position:sticky;top:0;z-index:300;height:56px;
+  background:rgba(2,6,18,.94);backdrop-filter:blur(22px);
+  border-bottom:1px solid var(--line2);
+  display:flex;align-items:center;padding:0 28px;gap:14px;}
+header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan) 20%,var(--blue) 50%,var(--purple) 80%,transparent);
+  background-size:300%;animation:hdrLine 4s linear infinite;}
+@keyframes hdrLine{from{background-position:0%}to{background-position:300%}}
+
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
-.logo-mark{
-  width:32px;height:32px;border:1.5px solid var(--amber);
-  display:grid;place-items:center;position:relative;overflow:hidden;
-}
-.logo-mark::after{content:'';position:absolute;inset:0;background:var(--amber);opacity:0;transition:opacity .3s;}
-.logo:hover .logo-mark::after{opacity:.1;}
-.logo-mark span{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--amber);position:relative;z-index:1;}
-.logo-name{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--text);letter-spacing:.06em;}
-.logo-name em{color:var(--amber);font-style:normal;}
+.logo-hex{width:36px;height:36px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:linear-gradient(135deg,var(--cyan),var(--blue));display:grid;place-items:center;
+  animation:hexPulse 3s ease-in-out infinite;}
+@keyframes hexPulse{0%,100%{filter:drop-shadow(0 0 5px var(--cyan))}50%{filter:drop-shadow(0 0 14px var(--cyan))}}
+.logo-hex span{font-family:var(--fe);font-size:11px;font-weight:700;color:#000;}
+.logo-name{font-family:var(--fe);font-size:15px;font-weight:700;color:#fff;letter-spacing:.08em;}
+.logo-name em{background:linear-gradient(90deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-style:normal;}
 
-.search-wrap{
-  flex:1;max-width:400px;display:flex;align-items:center;
-  border:1px solid var(--line2);background:var(--panel);height:36px;
-  transition:border-color .2s;position:relative;overflow:hidden;
-}
-.search-wrap::after{content:'';position:absolute;bottom:0;left:-100%;width:60%;height:1px;background:var(--amber);transition:left .4s;}
-.search-wrap:focus-within::after{left:120%;}
-.search-wrap:focus-within{border-color:var(--amber);}
-.s-pfx{font-family:var(--mono);font-size:10px;color:var(--amber);padding:0 10px;border-right:1px solid var(--line);white-space:nowrap;}
-.search-wrap input{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:var(--mono);font-size:12px;padding:0 12px;}
-.search-wrap input::placeholder{color:var(--dim);}
+.search-outer{position:relative;flex:1;max-width:420px;}
+.search-wrap{display:flex;align-items:center;height:38px;border:1px solid var(--line2);background:var(--panel);transition:border-color .2s,box-shadow .2s;overflow:hidden;}
+.search-wrap:focus-within{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(0,217,255,.18),0 0 20px rgba(0,217,255,.07);}
+.s-pfx{font-family:var(--fe);font-size:10px;font-weight:700;color:var(--cyan);padding:0 10px;border-right:1px solid var(--line2);white-space:nowrap;letter-spacing:.06em;}
+.search-wrap input{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:var(--fz);font-weight:700;font-size:12px;padding:0 10px;}
+.search-wrap input::placeholder{color:var(--dim);font-weight:400;}
+.search-btn{height:100%;padding:0 13px;background:none;border:none;border-left:1px solid var(--line2);color:var(--cyan);cursor:pointer;display:flex;align-items:center;transition:background .15s;flex-shrink:0;}
+.search-btn:hover{background:rgba(0,217,255,.08);}
+.search-btn svg{width:14px;height:14px;}
+
+/* SEARCH DROPDOWN */
+.search-dropdown{display:none;position:absolute;top:42px;left:0;right:0;z-index:500;
+  background:var(--dark);border:1px solid var(--line2);border-top:none;
+  max-height:440px;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.85);}
+.search-dropdown::-webkit-scrollbar{width:4px;}
+.search-dropdown::-webkit-scrollbar-thumb{background:var(--line2);}
+.sd-hdr{padding:8px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}
+.sd-hdr-txt{font-family:var(--fe);font-size:9px;color:var(--muted);letter-spacing:.1em;}
+.sd-hdr-txt strong{color:var(--cyan);}
+.sd-clear{background:none;border:1px solid var(--line);color:var(--muted);font-family:var(--fe);font-size:9px;cursor:pointer;padding:2px 8px;}
+.sd-clear:hover{color:var(--cyan);border-color:var(--cyan);}
+.sd-cat{padding:5px 14px 3px;font-family:var(--fe);font-size:9px;letter-spacing:.1em;color:var(--dim);background:var(--panel);border-bottom:1px solid var(--line);}
+.sd-item{display:flex;align-items:center;gap:11px;padding:9px 14px;border-bottom:1px solid var(--line);text-decoration:none;transition:background .12s;}
+.sd-item:hover{background:var(--panel2);}
+.sd-logo-w{width:30px;height:30px;border-radius:7px;background:var(--panel);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
+.sd-logo-w img{width:18px;height:18px;object-fit:contain;}
+.sd-name{font-family:var(--fz);font-weight:700;font-size:12px;color:var(--text);}
+.sd-name mark{background:rgba(0,217,255,.18);color:var(--cyan);border-radius:2px;padding:0 2px;}
+.sd-desc{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:400;}
+.sd-cat-badge{font-family:var(--fe);font-size:9px;color:var(--dim);border:1px solid var(--line);padding:2px 7px;flex-shrink:0;}
+.sd-empty{padding:28px 16px;text-align:center;}
+.sd-empty strong{font-family:var(--fz);font-size:14px;color:var(--cyan);display:block;margin-bottom:6px;}
+.sd-empty span{font-family:var(--fz);font-size:11px;color:var(--muted);font-weight:400;}
+.sd-highlight{outline:2px solid var(--cyan);outline-offset:2px;background:rgba(0,217,255,.05)!important;transition:outline .4s,background .4s;}
 
 nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
-nav a{font-family:var(--mono);font-size:10px;color:var(--muted);text-decoration:none;padding:6px 12px;border:1px solid transparent;letter-spacing:.04em;transition:all .15s;}
-nav a:hover{color:var(--text);border-color:var(--line2);}
-nav a.active{color:var(--amber);}
+nav a{font-family:var(--fz);font-size:13px;font-weight:700;color:var(--muted);text-decoration:none;padding:6px 14px;border:1px solid transparent;letter-spacing:.04em;transition:all .15s;position:relative;}
+nav a::after{content:'';position:absolute;bottom:0;left:50%;right:50%;height:1px;background:var(--cyan);transition:left .2s,right .2s;}
+nav a:hover::after,nav a.active::after{left:12%;right:12%;}
+nav a:hover{color:var(--text);}
+nav a.active{color:var(--cyan);}
 
-.lang-sw{display:flex;align-items:center;border:1px solid var(--line2);background:var(--panel);overflow:hidden;flex-shrink:0;}
-.lang-btn{font-family:var(--mono);font-size:10px;letter-spacing:.04em;padding:0 12px;height:30px;background:none;border:none;color:var(--dim);cursor:pointer;transition:all .15s;border-right:1px solid var(--line);}
+.lang-sw{display:flex;align-items:center;border:1px solid var(--line2);overflow:hidden;flex-shrink:0;}
+.lang-btn{font-family:var(--fe);font-size:10px;font-weight:700;letter-spacing:.06em;padding:0 13px;height:32px;background:none;border:none;color:var(--muted);cursor:pointer;transition:all .15s;border-right:1px solid var(--line);}
 .lang-btn:last-child{border-right:none;}
-.lang-btn:hover{color:var(--text);background:var(--panel2);}
-.lang-btn.active{color:var(--amber);background:var(--amber2);}
+.lang-btn:hover{color:var(--text);background:var(--panel);}
+.lang-btn.active{color:var(--cyan);background:rgba(0,217,255,.08);}
 
-.h-submit{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;background:var(--amber);color:var(--bg);border:none;padding:8px 16px;cursor:pointer;transition:opacity .2s;position:relative;overflow:hidden;}
-.h-submit::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(255,255,255,.2);border-radius:50%;transform:translate(-50%,-50%);transition:width .4s,height .4s;}
-.h-submit:hover::before{width:200px;height:200px;}
+.h-submit{font-family:var(--fz);font-size:12px;font-weight:700;background:linear-gradient(90deg,var(--cyan),var(--blue));color:#000;border:none;padding:9px 20px;cursor:pointer;flex-shrink:0;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:filter .2s;}
+.h-submit:hover{filter:brightness(1.2);}
 
-/* i18n */
-[data-lang]{display:none;}
-[data-lang].show{display:inline;}
-[data-lang-block]{display:none;}
-[data-lang-block].show{display:block;}
+[data-lang]{display:none;}[data-lang].show{display:inline;}
+[data-lang-block]{display:none;}[data-lang-block].show{display:block;}
 
-/* ══════════════════════════════════════
-   HERO — 震撼科技感版
-══════════════════════════════════════ */
-.hero{
-  position:relative;z-index:1;
-  min-height:480px;
-  display:flex;align-items:center;justify-content:center;
-  text-align:center;
-  padding:80px 24px 56px;
-  overflow:hidden;
-}
-
-/* Canvas 粒子 */
+/* ═══ HERO ═══ */
+.hero{position:relative;z-index:1;min-height:580px;display:flex;align-items:center;justify-content:center;text-align:center;padding:90px 24px 60px;overflow:hidden;}
 #hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;}
-
-/* 多層光暈背景 */
-.hero::before{
-  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+.hero-glow{position:absolute;inset:0;z-index:1;pointer-events:none;
   background:
-    radial-gradient(ellipse 60% 80% at 15% 50%, rgba(34,211,238,.09) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 80% at 85% 50%, rgba(167,139,250,.09) 0%, transparent 55%),
-    radial-gradient(ellipse 80% 50% at 50% 120%, rgba(245,166,35,.13) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 40% at 50% 0%, rgba(96,165,250,.05) 0%, transparent 60%);
-}
+    radial-gradient(ellipse 70% 80% at 10% 50%,rgba(0,60,220,.22) 0%,transparent 55%),
+    radial-gradient(ellipse 70% 80% at 90% 50%,rgba(124,77,255,.18) 0%,transparent 55%),
+    radial-gradient(ellipse 90% 55% at 50% 115%,rgba(0,217,255,.18) 0%,transparent 52%),
+    radial-gradient(ellipse 50% 40% at 50% -5%,rgba(30,144,255,.12) 0%,transparent 55%);}
+.hero-scan{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,217,255,.018) 3px,rgba(0,217,255,.018) 4px);
+  animation:scanV 6s linear infinite;}
+@keyframes scanV{from{background-position:0 0}to{background-position:0 100px}}
+.hero-beam{position:absolute;top:0;width:22%;height:100%;z-index:2;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(0,217,255,.04) 40%,rgba(0,217,255,.09) 50%,rgba(0,217,255,.04) 60%,transparent);
+  animation:beamSwipe 7s ease-in-out infinite;}
+@keyframes beamSwipe{0%{left:-25%}100%{left:115%}}
 
-/* 掃描線紋理 */
-.hero::after{
-  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.012) 3px,rgba(255,255,255,.012) 4px);
-  animation:scanV 8s linear infinite;
-}
-@keyframes scanV{from{background-position:0 0;}to{background-position:0 100px;}}
+/* Rings */
+.hero-rings{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1;pointer-events:none;}
+.ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;border-style:solid;}
+.ring-1{width:260px;height:260px;border-width:1px;border-color:rgba(0,217,255,.2);animation:rotCW 18s linear infinite;}
+.ring-2{width:400px;height:400px;border-width:1px;border-color:rgba(30,144,255,.14);animation:rotCCW 30s linear infinite;}
+.ring-3{width:560px;height:560px;border-width:1px;border-color:rgba(124,77,255,.09);animation:rotCW 45s linear infinite;}
+.ring-4{width:730px;height:730px;border-width:1px;border-color:rgba(0,217,255,.05);animation:rotCCW 65s linear infinite;}
+@keyframes rotCW{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes rotCCW{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(-360deg)}}
+.ring-1::before,.ring-2::before,.ring-3::before{content:'';position:absolute;border-radius:50%;top:-4px;left:50%;transform:translateX(-50%);width:8px;height:8px;}
+.ring-1::before{background:var(--cyan);box-shadow:0 0 10px var(--cyan),0 0 22px var(--cyan);}
+.ring-2::before{background:var(--blue);box-shadow:0 0 10px var(--blue),0 0 22px var(--blue);}
+.ring-3::before{background:var(--purple);box-shadow:0 0 10px var(--purple);}
+.hero-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;pointer-events:none;width:140px;height:140px;
+  background:radial-gradient(circle,rgba(0,217,255,.2) 0%,transparent 70%);animation:coreGlow 3s ease-in-out infinite;}
+@keyframes coreGlow{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.4)}}
 
-/* 橫向光束掃描 */
-.hero-beam{
-  position:absolute;top:0;width:30%;height:100%;z-index:2;pointer-events:none;
-  background:linear-gradient(90deg,transparent 0%,rgba(245,166,35,.03) 40%,rgba(245,166,35,.07) 50%,rgba(245,166,35,.03) 60%,transparent 100%);
-  animation:beam 6s ease-in-out infinite;
-}
-@keyframes beam{0%{left:-35%;}100%{left:120%;}}
+/* Frame corners */
+.hero-frame{position:absolute;inset:22px;z-index:2;pointer-events:none;animation:frameFade 4s ease-in-out infinite;}
+@keyframes frameFade{0%,100%{opacity:.35}50%{opacity:.9}}
+.hf-tl,.hf-tr,.hf-bl,.hf-br{position:absolute;width:32px;height:32px;}
+.hf-tl{top:0;left:0;border-top:2px solid var(--cyan);border-left:2px solid var(--cyan);}
+.hf-tr{top:0;right:0;border-top:2px solid var(--cyan);border-right:2px solid var(--cyan);}
+.hf-bl{bottom:0;left:0;border-bottom:2px solid var(--cyan);border-left:2px solid var(--cyan);}
+.hf-br{bottom:0;right:0;border-bottom:2px solid var(--cyan);border-right:2px solid var(--cyan);}
 
-/* 四角裝飾線框 */
-.hero-corners{position:absolute;inset:20px;z-index:2;pointer-events:none;}
-.hero-corners::before,.hero-corners::after,
-.hc-bl,.hc-br{
-  content:'';position:absolute;width:24px;height:24px;
-  border-color:rgba(245,166,35,.3);border-style:solid;
-}
-.hero-corners::before{top:0;left:0;border-width:1.5px 0 0 1.5px;}
-.hero-corners::after{top:0;right:0;border-width:1.5px 1.5px 0 0;}
-.hc-bl{bottom:0;left:0;border-width:0 0 1.5px 1.5px;}
-.hc-br{bottom:0;right:0;border-width:0 1.5px 1.5px 0;}
+/* Floating tags */
+.ttag{position:absolute;z-index:3;font-family:var(--fe);font-size:9px;font-weight:700;letter-spacing:.1em;
+  color:var(--muted);border:1px solid var(--line2);background:rgba(2,6,18,.75);padding:4px 11px;backdrop-filter:blur(6px);pointer-events:none;}
+.ttag-1{top:18%;left:4%;animation:tf 4s ease-in-out infinite;}
+.ttag-2{top:40%;right:3%;animation:tf 4s .7s ease-in-out infinite;}
+.ttag-3{bottom:28%;left:5%;animation:tf 4s 1.4s ease-in-out infinite;}
+.ttag-4{top:60%;right:4%;animation:tf 4s 2.1s ease-in-out infinite;}
+.ttag-5{bottom:16%;right:7%;animation:tf 4s 2.8s ease-in-out infinite;}
+.ttag-6{top:26%;left:13%;animation:tf 4s 3.5s ease-in-out infinite;}
+@keyframes tf{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
-/* 中心內容 */
-.hero-content{position:relative;z-index:3;}
+.hero-content{position:relative;z-index:4;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--fe);font-size:10px;font-weight:700;letter-spacing:.2em;
+  color:var(--cyan);border:1px solid rgba(0,217,255,.22);background:rgba(0,217,255,.04);padding:6px 20px;margin-bottom:24px;animation:fadeUp .4s ease both;}
+.e-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);animation:dotPulse 2s infinite;}
+@keyframes dotPulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,217,255,.5)}50%{opacity:.7;box-shadow:0 0 0 7px rgba(0,217,255,0)}}
 
-/* 頂部狀態指示器 */
-.hero-status{
-  display:inline-flex;align-items:center;gap:8px;
-  font-family:var(--mono);font-size:9px;letter-spacing:.14em;
-  color:var(--muted);
-  border:1px solid var(--line2);background:rgba(12,14,20,.8);
-  padding:5px 14px;margin-bottom:24px;backdrop-filter:blur(8px);
-  animation:fadeUp .4s ease both;
-}
-.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(52,211,153,.4);}50%{opacity:.7;box-shadow:0 0 0 4px rgba(52,211,153,0);}}
+.hero h1{font-family:var(--fz);font-size:clamp(32px,5.5vw,66px);font-weight:700;line-height:1.1;letter-spacing:.02em;margin-bottom:10px;animation:fadeUp .5s .1s ease both;}
+.h1-line1{display:block;color:#fff;text-shadow:0 0 50px rgba(0,217,255,.15);}
+.h1-line2{display:block;background:linear-gradient(90deg,var(--cyan) 0%,var(--blue) 30%,var(--purple) 60%,var(--pink) 80%,var(--cyan) 100%);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradFlow 5s linear infinite;}
+@keyframes gradFlow{from{background-position:0%}to{background-position:300%}}
+.cursor-blink{display:inline-block;width:4px;height:.85em;background:var(--cyan);margin-left:5px;vertical-align:middle;-webkit-text-fill-color:var(--cyan);animation:blink .7s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-/* 主標題 */
-.hero h1{
-  font-family:var(--mono);
-  font-size:clamp(28px,5vw,54px);
-  font-weight:700;line-height:1.1;
-  letter-spacing:-.02em;
-  margin-bottom:8px;
-  animation:fadeUp .5s .1s ease both;
-}
-.hero h1 .line1{display:block;color:var(--text);}
-.hero h1 .line2{
-  display:block;
-  background:linear-gradient(90deg,var(--cyan) 0%,var(--amber) 50%,var(--purple) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  background-size:200%;
-  animation:gradShift 4s ease infinite;
-}
-@keyframes gradShift{0%,100%{background-position:0%;}50%{background-position:100%;}}
+.hero-sub{font-family:var(--fz);font-size:16px;font-weight:700;color:var(--muted);max-width:560px;margin:14px auto 30px;line-height:1.7;animation:fadeUp .5s .2s ease both;}
+.hero-badges{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:30px;animation:fadeUp .5s .25s ease both;}
+.hb{display:inline-flex;align-items:center;gap:6px;font-family:var(--fz);font-size:11px;font-weight:700;color:var(--muted);
+  border:1px solid var(--line2);background:rgba(2,6,18,.65);padding:5px 14px;backdrop-filter:blur(6px);animation:floatY 3s ease-in-out infinite;}
+.hb:nth-child(2){animation-delay:.5s}.hb:nth-child(3){animation-delay:1s}.hb:nth-child(4){animation-delay:1.5s}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.hb-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
 
-/* 游標閃爍 */
-.cursor{display:inline-block;width:3px;height:.85em;background:var(--amber);margin-left:4px;vertical-align:middle;-webkit-text-fill-color:var(--amber);animation:blink .7s step-end infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
-
-/* 副標 */
-.hero-sub{font-size:15px;color:var(--muted);max-width:540px;margin:16px auto 28px;line-height:1.7;animation:fadeUp .5s .2s ease both;}
-
-/* 浮動標籤 */
-.hero-badges{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:28px;flex-wrap:wrap;animation:fadeUp .5s .25s ease both;}
-.hbadge{
-  display:inline-flex;align-items:center;gap:6px;
-  font-family:var(--mono);font-size:9px;letter-spacing:.08em;
-  color:var(--dim);border:1px solid var(--line2);background:rgba(12,14,20,.7);
-  padding:5px 12px;backdrop-filter:blur(6px);
-  animation:float 3s ease-in-out infinite;
-}
-.hbadge:nth-child(2){animation-delay:.6s;}
-.hbadge:nth-child(3){animation-delay:1.2s;}
-.hbadge:nth-child(4){animation-delay:1.8s;}
-@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
-.hbdot{width:5px;height:5px;border-radius:50%;}
-
-/* 統計欄 */
-.hero-stats{
-  display:inline-flex;align-items:stretch;
-  border:1px solid var(--line2);background:rgba(12,14,20,.8);
-  backdrop-filter:blur(12px);
-  animation:fadeUp .5s .35s ease both;
-}
-.hstat{text-align:center;padding:14px 28px;border-right:1px solid var(--line2);position:relative;}
+.hero-stats{display:inline-flex;align-items:stretch;border:1px solid var(--line2);background:rgba(2,6,18,.78);backdrop-filter:blur(14px);animation:fadeUp .5s .35s ease both;box-shadow:0 0 40px rgba(0,217,255,.06);}
+.hstat{text-align:center;padding:16px 28px;border-right:1px solid var(--line2);position:relative;}
 .hstat:last-child{border-right:none;}
-.hstat::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:30px;height:1px;background:var(--amber);opacity:.4;}
-.hstat-num{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--amber);display:block;}
-.hstat-lbl{font-size:10px;color:var(--dim);margin-top:3px;letter-spacing:.04em;}
+.hstat::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
+.hstat-num{font-family:var(--fe);font-size:26px;font-weight:700;display:block;background:linear-gradient(180deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hstat-lbl{font-family:var(--fz);font-size:10px;color:var(--dim);margin-top:4px;font-weight:700;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+/* FILTER */
+.filter-wrap{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;padding:0 24px 40px;position:relative;z-index:2;animation:fadeUp .5s .4s ease both;}
+.ftab{font-family:var(--fz);font-size:12px;font-weight:700;letter-spacing:.04em;padding:7px 18px;border:1px solid var(--line2);background:var(--panel);color:var(--muted);cursor:pointer;transition:all .15s;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
+.ftab:hover{color:var(--text);border-color:rgba(0,217,255,.4);}
+.ftab.on{border-color:var(--cyan);color:var(--cyan);background:rgba(0,217,255,.07);box-shadow:0 0 14px rgba(0,217,255,.1);}
 
-/* ══ FILTER ══ */
-.filter-wrap{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;padding:0 24px 36px;position:relative;z-index:1;animation:fadeUp .5s .4s ease both;}
-.ftab{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:7px 16px;border:1px solid var(--line2);background:var(--panel);color:var(--muted);cursor:pointer;transition:all .15s;}
-.ftab:hover{color:var(--text);border-color:var(--dim);}
-.ftab.on{border-color:var(--amber);color:var(--amber);background:var(--amber2);}
-
-/* ══ SECTION ══ */
-.container{max-width:1280px;margin:0 auto;padding:0 28px;position:relative;z-index:1;}
-.section{margin-bottom:60px;}
+/* LAYOUT */
+.container{max-width:1320px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+.section{margin-bottom:64px;}
 .sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
 .sec-left{display:flex;align-items:center;gap:12px;}
-.sec-icon{width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid var(--line2);background:var(--panel);position:relative;overflow:hidden;transition:transform .3s;}
-.sec-icon::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--amber) 0%,transparent 60%);opacity:.1;}
-.sec-head:hover .sec-icon{transform:rotate(-5deg) scale(1.06);}
-.sec-title{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text);letter-spacing:.04em;}
-.sec-title .acc{color:var(--amber);}
-.sec-sub{font-size:11px;color:var(--dim);margin-top:2px;}
-.sec-line{flex:1;height:1px;background:var(--line);margin:0 16px;}
-.see-all{font-family:var(--mono);font-size:10px;color:var(--dim);text-decoration:none;padding:5px 14px;border:1px solid var(--line);transition:all .15s;letter-spacing:.04em;white-space:nowrap;}
-.see-all:hover{color:var(--amber);border-color:var(--amber);}
+.sec-ico{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid var(--line2);background:var(--panel);position:relative;overflow:hidden;transition:transform .3s;}
+.sec-ico::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--cyan),transparent);opacity:.08;}
+.sec-head:hover .sec-ico{transform:rotate(-6deg) scale(1.1);}
+.sec-title{font-family:var(--fz);font-size:16px;font-weight:700;color:#fff;letter-spacing:.04em;}
+.sec-title .acc{font-family:var(--fe);font-size:13px;font-weight:700;background:linear-gradient(90deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-right:6px;}
+.sec-sub{font-family:var(--fz);font-size:11px;color:var(--dim);margin-top:3px;font-weight:400;}
+.sec-line{flex:1;height:1px;margin:0 16px;background:linear-gradient(90deg,var(--line2),transparent);}
+.see-all{font-family:var(--fe);font-size:10px;font-weight:700;color:var(--muted);text-decoration:none;padding:5px 14px;border:1px solid var(--line);letter-spacing:.04em;transition:all .15s;}
+.see-all:hover{color:var(--cyan);border-color:var(--cyan);}
 
-/* ══ GRID ══ */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;}
-
-/* ══ CARD ══ */
-.card{
-  background:var(--panel);border:1px solid var(--line);
-  padding:18px;text-decoration:none;display:block;
-  position:relative;overflow:hidden;
+/* GRID + CARD */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px;}
+.card{background:var(--panel);border:1px solid var(--line);padding:18px;text-decoration:none;display:block;position:relative;overflow:hidden;
   transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s,border-color .2s;
   animation:cardIn .4s ease both;
-}
-.card:nth-child(1){animation-delay:.05s;}.card:nth-child(2){animation-delay:.10s;}
-.card:nth-child(3){animation-delay:.15s;}.card:nth-child(4){animation-delay:.20s;}
-.card:nth-child(5){animation-delay:.25s;}.card:nth-child(6){animation-delay:.30s;}
-.card:nth-child(7){animation-delay:.35s;}.card:nth-child(8){animation-delay:.40s;}
-@keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
-.card:hover{transform:translateY(-6px) scale(1.015);border-color:var(--line2);box-shadow:0 16px 40px rgba(0,0,0,.5),0 0 0 1px var(--line2);}
-/* 光暈掃過 */
-.card::before{content:'';position:absolute;top:-60%;left:-60%;width:50%;height:200%;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.04) 50%,transparent 60%);transition:left .6s ease;pointer-events:none;}
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));}
+.card:nth-child(1){animation-delay:.04s}.card:nth-child(2){animation-delay:.08s}
+.card:nth-child(3){animation-delay:.12s}.card:nth-child(4){animation-delay:.16s}
+.card:nth-child(5){animation-delay:.20s}.card:nth-child(6){animation-delay:.24s}
+.card:nth-child(7){animation-delay:.28s}.card:nth-child(8){animation-delay:.32s}
+.card:nth-child(9){animation-delay:.36s}.card:nth-child(10){animation-delay:.40s}
+.card:nth-child(11){animation-delay:.44s}.card:nth-child(12){animation-delay:.48s}
+@keyframes cardIn{from{opacity:0;transform:translateY(22px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.card:hover{transform:translateY(-7px) scale(1.015);border-color:var(--line2);box-shadow:0 18px 50px rgba(0,0,0,.6),0 0 22px rgba(0,217,255,.07),0 0 0 1px var(--line2);}
+.card::before{content:'';position:absolute;top:-60%;left:-80%;width:60%;height:220%;background:linear-gradient(110deg,transparent 40%,rgba(0,217,255,.05) 50%,transparent 60%);transition:left .6s ease;pointer-events:none;}
 .card:hover::before{left:160%;}
-/* 底部色條 */
-.card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--c-accent,var(--amber));transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--c-accent,var(--cyan)),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
 .card:hover::after{transform:scaleX(1);}
-
-/* Logo 容器 */
-.card-logo-wrap{width:48px;height:48px;position:relative;margin-bottom:14px;}
-.logo-bg{
-  position:absolute;inset:0;border-radius:12px;
-  background:var(--c-bg,rgba(245,166,35,.08));
-  border:1px solid var(--c-border,rgba(245,166,35,.15));
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .3s;
-}
-.card:hover .logo-bg{transform:rotate(-8deg) scale(1.1);background:var(--c-bgh,rgba(245,166,35,.14));}
-
-/* 真實 logo 圖片 */
-.tool-logo{
-  width:28px;height:28px;border-radius:6px;
-  position:relative;z-index:1;
-  object-fit:contain;
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
-  display:block;
-}
-.card:hover .tool-logo{transform:scale(1.15) rotate(4deg);}
-
-/* Fallback emoji（當圖片載入失敗時顯示） */
-.logo-fallback{
-  width:28px;height:28px;border-radius:6px;
-  position:absolute;inset:0;margin:auto;
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;z-index:1;
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
-}
-.card:hover .logo-fallback{transform:scale(1.15) rotate(4deg);}
-
-.badge{position:absolute;top:14px;right:14px;font-family:var(--mono);font-size:9px;letter-spacing:.06em;padding:2px 7px;border:1px solid;transition:transform .2s;}
-.card:hover .badge{transform:scale(1.05);}
-.badge-hot{color:var(--red);border-color:rgba(248,113,113,.35);background:rgba(248,113,113,.08);}
-.badge-new{color:var(--green);border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.08);}
-.badge-pro{color:var(--purple);border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.08);}
-.badge-free{color:var(--cyan);border-color:rgba(34,211,238,.35);background:rgba(34,211,238,.08);}
-
-.c-name{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px;letter-spacing:.02em;transition:color .2s;}
-.card:hover .c-name{color:#fff;}
-.c-desc{font-size:12px;color:var(--muted);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.cat-llm{--c-accent:var(--cyan)}.cat-img{--c-accent:var(--purple)}.cat-code{--c-accent:var(--green)}.cat-vid{--c-accent:var(--amber)}.cat-aud{--c-accent:var(--pink)}.cat-wrt{--c-accent:var(--blue)}.cat-off{--c-accent:var(--red)}
+.logo-wrap{width:56px;height:56px;position:relative;margin-bottom:14px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(255,255,255,0.08);border:1px solid var(--line2);transition:transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;}
+.card:hover .logo-wrap{width:56px;height:56px;position:relative;margin-bottom:14px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(255,255,255,0.08);border:1px solid var(--line2);transition:transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;}
+.tool-logo{width:38px;height:38px;border-radius:8px;object-fit:contain;position:relative;z-index:1;transition:transform .35s cubic-bezier(.34,1.56,.64,1);}
+.card:hover .tool-logo{transform:scale(1.08);}
+.logo-bg-sq{display:none;}
+.logo-fb{display:none!important;}
+.badge{position:absolute;top:12px;right:12px;font-family:var(--fe);font-size:8px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border:1px solid;transition:transform .2s;}
+.card:hover .badge{transform:scale(1.06);}
+.badge-hot{color:#ff4466;border-color:rgba(255,68,102,.35);background:rgba(255,68,102,.08);}
+.badge-new{color:#00ff88;border-color:rgba(0,255,136,.35);background:rgba(0,255,136,.08);}
+.badge-pro{color:#7c4dff;border-color:rgba(124,77,255,.35);background:rgba(124,77,255,.08);}
+.badge-free{color:#00d9ff;border-color:rgba(0,217,255,.35);background:rgba(0,217,255,.08);}
+.c-name{font-family:var(--fz);font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;letter-spacing:.02em;transition:color .2s;}
+.card:hover .c-name{color:var(--cyan);}
+.c-desc{font-family:var(--fz);font-size:12px;font-weight:400;color:var(--muted);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .c-tags{display:flex;gap:5px;margin-top:12px;flex-wrap:wrap;}
-.c-tag{font-family:var(--mono);font-size:9px;color:var(--dim);border:1px solid var(--line);padding:2px 7px;letter-spacing:.03em;transition:all .15s;}
+.c-tag{font-family:var(--fz);font-size:10px;font-weight:700;color:var(--dim);border:1px solid var(--line);padding:2px 7px;transition:all .15s;}
 .card:hover .c-tag{border-color:var(--line2);color:var(--muted);}
 
-/* 分類顏色 */
-.cat-llm  {--c-accent:var(--cyan);  --c-bg:rgba(34,211,238,.07); --c-bgh:rgba(34,211,238,.13); --c-border:rgba(34,211,238,.2);}
-.cat-img  {--c-accent:var(--purple);--c-bg:rgba(167,139,250,.07);--c-bgh:rgba(167,139,250,.13);--c-border:rgba(167,139,250,.2);}
-.cat-code {--c-accent:var(--green); --c-bg:rgba(52,211,153,.07); --c-bgh:rgba(52,211,153,.13); --c-border:rgba(52,211,153,.2);}
-.cat-vid  {--c-accent:var(--amber); --c-bg:rgba(245,166,35,.07); --c-bgh:rgba(245,166,35,.13); --c-border:rgba(245,166,35,.2);}
-.cat-off  {--c-accent:var(--red);   --c-bg:rgba(248,113,113,.07);--c-bgh:rgba(248,113,113,.13);--c-border:rgba(248,113,113,.2);}
-
-/* ══ AD ══ */
-.mid-ad{
-  background:var(--dark);border:1px solid var(--line2);padding:24px 32px;
-  margin:8px 0 56px;display:flex;align-items:center;justify-content:space-between;gap:20px;
-  position:relative;overflow:hidden;
-}
-.mid-ad::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--ac1,var(--amber)),var(--ac2,var(--purple)),var(--ac1,var(--amber)));background-size:200%;animation:shimmer 3s linear infinite;}
-@keyframes shimmer{from{background-position:0%;}to{background-position:200%;}}
-.mid-ad::after{content:'';position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,var(--ag,rgba(245,166,35,.05)) 0%,transparent 70%);pointer-events:none;}
-.ad-badge{font-family:var(--mono);font-size:9px;color:var(--dim);border:1px solid var(--line2);padding:2px 7px;letter-spacing:.1em;margin-bottom:8px;display:inline-block;}
-.mid-ad h3{font-family:var(--mono);font-size:13px;color:var(--text);margin-bottom:4px;font-weight:500;}
-.mid-ad p{font-size:12px;color:var(--muted);}
+/* ADS */
+.mid-ad{background:var(--dark);border:1px solid var(--line2);padding:22px 32px;margin:6px 0 52px;display:flex;align-items:center;justify-content:space-between;gap:20px;position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));}
+.mid-ad::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--ac1,var(--cyan)),var(--ac2,var(--blue)),var(--ac1,var(--cyan)));background-size:300%;animation:hdrLine 3s linear infinite;}
+.mid-ad::after{content:'';position:absolute;right:-80px;top:-80px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,var(--ag,rgba(0,217,255,.05)) 0%,transparent 70%);pointer-events:none;}
+.ad-badge{font-family:var(--fe);font-size:9px;font-weight:700;color:var(--dim);border:1px solid var(--line2);padding:2px 8px;letter-spacing:.1em;margin-bottom:8px;display:inline-block;}
+.mid-ad h3{font-family:var(--fz);font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;}
+.mid-ad p{font-family:var(--fz);font-size:12px;color:var(--muted);font-weight:400;}
 .ad-right{display:flex;align-items:center;gap:12px;flex-shrink:0;}
-.ad-pill{font-family:var(--mono);font-size:10px;color:var(--amber);border:1px solid rgba(245,166,35,.3);padding:4px 12px;}
-.ad-btn{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;background:var(--amber);color:var(--bg);padding:10px 22px;text-decoration:none;border:none;transition:opacity .2s;white-space:nowrap;cursor:pointer;display:inline-block;}
-.ad-btn:hover{opacity:.85;}
-.ad-purple{--ac1:var(--purple);--ac2:var(--pink);--ag:rgba(167,139,250,.06);}
-.ad-blue{--ac1:var(--blue);--ac2:var(--cyan);--ag:rgba(96,165,250,.06);}
+.ad-pill{font-family:var(--fe);font-size:10px;font-weight:700;color:var(--cyan);border:1px solid rgba(0,217,255,.3);padding:4px 12px;}
+.ad-btn{font-family:var(--fz);font-size:12px;font-weight:700;background:linear-gradient(90deg,var(--cyan),var(--blue));color:#000;padding:10px 24px;text-decoration:none;border:none;cursor:pointer;transition:filter .2s;white-space:nowrap;display:inline-block;}
+.ad-btn:hover{filter:brightness(1.15);}
+.ad-purple{--ac1:var(--purple);--ac2:var(--pink);--ag:rgba(124,77,255,.06);}
+.ad-blue{--ac1:var(--blue);--ac2:var(--teal);--ag:rgba(30,144,255,.06);}
 
-/* ══ FOOTER ══ */
-.footer-wrap{border-top:1px solid var(--line);background:var(--dark);padding:20px 28px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;position:relative;z-index:1;}
-.f-brand{font-family:var(--mono);font-size:11px;color:var(--muted);}
-.f-brand span{color:var(--amber);}
+/* RANK */
+.rank-list{display:flex;flex-direction:column;gap:8px;}
+.rank-item{display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--panel);border:1px solid var(--line);text-decoration:none;transition:all .15s;position:relative;overflow:hidden;}
+.rank-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--ri-c,var(--cyan));transform:scaleY(0);transition:transform .3s;}
+.rank-item:hover::before{transform:scaleY(1);}
+.rank-item:hover{background:var(--panel2);border-color:var(--line2);}
+.rank-num{font-family:var(--fe);font-size:20px;font-weight:700;color:var(--dim);width:36px;flex-shrink:0;text-align:center;}
+.rank-item:nth-child(1){--ri-c:var(--amber)}.rank-item:nth-child(1) .rank-num{color:var(--amber);}
+.rank-item:nth-child(2){--ri-c:var(--muted)}.rank-item:nth-child(2) .rank-num{color:var(--muted);}
+.rank-item:nth-child(3){--ri-c:#cd7f32}.rank-item:nth-child(3) .rank-num{color:#cd7f32;}
+.rank-logo{width:36px;height:36px;border-radius:8px;background:var(--dark);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
+.rank-logo img{width:22px;height:22px;object-fit:contain;}
+.rank-name{font-family:var(--fz);font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;}
+.rank-desc{font-family:var(--fz);font-size:11px;color:var(--muted);font-weight:400;}
+.rank-bar-wrap{width:100px;flex-shrink:0;}
+.rank-bar-bg{height:3px;background:var(--line);border-radius:2px;overflow:hidden;}
+.rank-bar-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--blue));border-radius:2px;}
+.rank-score{font-family:var(--fe);font-size:9px;color:var(--dim);margin-top:3px;text-align:right;font-weight:700;}
+
+/* NEW */
+.new-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;}
+.new-item{display:flex;align-items:center;gap:12px;padding:14px;background:var(--panel);border:1px solid var(--line);text-decoration:none;transition:all .15s;position:relative;overflow:hidden;}
+.new-item::before{content:'NEW';position:absolute;top:8px;right:8px;font-family:var(--fe);font-size:8px;font-weight:700;color:var(--green);border:1px solid rgba(0,255,136,.3);padding:1px 6px;background:rgba(0,255,136,.07);}
+.new-item:hover{background:var(--panel2);border-color:rgba(0,255,136,.3);}
+.new-logo{width:36px;height:36px;border-radius:8px;background:var(--dark);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;}
+.new-logo img{width:22px;height:22px;object-fit:contain;}
+.new-name{font-family:var(--fz);font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;}
+.new-desc{font-family:var(--fz);font-size:11px;color:var(--muted);font-weight:400;}
+.new-date{font-family:var(--fe);font-size:9px;color:var(--dim);margin-top:4px;font-weight:700;}
+
+/* FOOTER */
+.footer-wrap{border-top:1px solid var(--line2);background:var(--dark);padding:20px 28px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;position:relative;z-index:1;}
+.f-brand{font-family:var(--fz);font-size:12px;font-weight:700;color:var(--muted);}
+.f-brand span{background:linear-gradient(90deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .f-links{display:flex;justify-content:center;}
-.f-links a{font-family:var(--mono);font-size:10px;color:var(--dim);text-decoration:none;padding:4px 14px;border-left:1px solid var(--line);transition:color .15s;}
+.f-links a{font-family:var(--fz);font-size:12px;font-weight:700;color:var(--dim);text-decoration:none;padding:4px 14px;border-left:1px solid var(--line);transition:color .15s;}
 .f-links a:last-child{border-right:1px solid var(--line);}
-.f-links a:hover{color:var(--amber);}
-.f-right{font-family:var(--mono);font-size:10px;color:var(--dim);text-align:right;}
+.f-links a:hover{color:var(--cyan);}
+.f-right{font-family:var(--fe);font-size:10px;font-weight:700;color:var(--dim);text-align:right;}
 
-/* ══ RESPONSIVE ══ */
-@media(max-width:900px){
-  .grid{grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:12px;}
-  .hero{padding:60px 16px 40px;min-height:380px;}
-  .hstat{padding:12px 18px;}
-  header{padding:0 16px;gap:12px;}
-  nav{display:none;}
-  .mid-ad{flex-direction:column;align-items:flex-start;gap:14px;}
-  .footer-wrap{grid-template-columns:1fr;text-align:center;}
-  .f-right{text-align:center;}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:11px;}.hstat{padding:13px 18px;}}
+@media(max-width:720px){header{padding:0 14px;gap:10px;}nav{display:none;}.grid{grid-template-columns:repeat(2,1fr);gap:10px;}.hero h1{font-size:26px;}.container{padding:0 12px;}.mid-ad{flex-direction:column;align-items:flex-start;gap:14px;}.footer-wrap{grid-template-columns:1fr;text-align:center;}.f-right{text-align:center;}}
+
+/* Logo 修正 */
+.logo-wrap{
+  width:56px;height:56px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.07);
+  border:1px solid var(--line2);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;
+  position:relative;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;
+  overflow:hidden;
 }
-@media(max-width:600px){
-  .grid{grid-template-columns:repeat(2,1fr);gap:10px;}
-  .hero h1{font-size:24px;}
-  .hero-corners{display:none;}
-  .container{padding:0 14px;}
-  .hstat{padding:10px 14px;}
-  .hstat-num{font-size:18px;}
+.card:hover .logo-wrap{
+  transform:scale(1.08) rotate(-4deg);
+  box-shadow:0 0 18px rgba(0,217,255,0.18);
 }
+.tool-logo{
+  width:36px;height:36px;
+  object-fit:contain;
+  border-radius:6px;
+  display:block;
+}
+.logo-bg-sq{display:none!important;}
+.logo-fb{display:none!important;}
 </style>
 </head>
-<body>
+<body id="top">
+<canvas id="bg-canvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%;"></canvas>
 
-<!-- ══ HEADER ══ -->
+<!-- HEADER -->
 <header>
   <a class="logo" href="#">
-    <div class="logo-mark"><span>AI</span></div>
+    <div class="logo-hex"><span>AI</span></div>
     <span class="logo-name">AIN<em>AV</em></span>
   </a>
-
-  <div class="search-wrap">
-    <span class="s-pfx">SEARCH://</span>
-    <input id="si" type="text">
+  <div class="search-outer">
+    <div class="search-wrap">
+      <span class="s-pfx">SEARCH://</span>
+      <input id="si" type="text" autocomplete="off">
+      <button class="search-btn" onclick="execSearch()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+    </div>
+    <div id="sdrop" class="search-dropdown"></div>
   </div>
-
   <nav>
-    <a href="#" class="active">
-      <span data-lang="zh" class="show">首頁</span><span data-lang="en">Home</span>
-    </a>
-    <a href="#">
-      <span data-lang="zh" class="show">分類</span><span data-lang="en">Categories</span>
-    </a>
-    <a href="#">
-      <span data-lang="zh" class="show">排行榜</span><span data-lang="en">Ranking</span>
-    </a>
-    <a href="#">
-      <span data-lang="zh" class="show">最新</span><span data-lang="en">Latest</span>
-    </a>
+    <a href="#top" class="active" onclick="navClick(this)"><span data-lang="zh" class="show">首頁</span><span data-lang="en">Home</span></a>
+    <a href="#llm" onclick="navClick(this)"><span data-lang="zh" class="show">分類</span><span data-lang="en">Categories</span></a>
+    <a href="#ranking-section" onclick="navClick(this)"><span data-lang="zh" class="show">排行榜</span><span data-lang="en">Ranking</span></a>
+    <a href="#new-section" onclick="navClick(this)"><span data-lang="zh" class="show">最新</span><span data-lang="en">Latest</span></a>
   </nav>
-
   <div class="lang-sw">
     <button class="lang-btn active" onclick="setLang('zh')">CN</button>
     <button class="lang-btn" onclick="setLang('en')">EN</button>
   </div>
-
-  <button class="h-submit">
-    <span data-lang="zh" class="show">+ 提交工具</span>
-    <span data-lang="en">+ Submit</span>
-  </button>
+  <button class="h-submit"><span data-lang="zh" class="show">+ 提交工具</span><span data-lang="en">+ Submit</span></button>
 </header>
 
-<!-- ══ HERO ══ -->
+<!-- HERO -->
 <div class="hero">
   <canvas id="hero-canvas"></canvas>
-  <div class="hero-beam"></div>
-  <div class="hero-corners">
-    <div class="hc-bl" style="position:absolute;bottom:0;left:0;width:24px;height:24px;border:1.5px solid rgba(245,166,35,.3);border-width:0 0 1.5px 1.5px;"></div>
-    <div class="hc-br" style="position:absolute;bottom:0;right:0;width:24px;height:24px;border:1.5px solid rgba(245,166,35,.3);border-width:0 1.5px 1.5px 0;"></div>
+  <div class="hero-glow"></div><div class="hero-scan"></div><div class="hero-beam"></div>
+  <div class="hero-rings">
+    <div class="ring ring-1"></div><div class="ring ring-2"></div>
+    <div class="ring ring-3"></div><div class="ring ring-4"></div>
   </div>
-
+  <div class="hero-core"></div>
+  <div class="hero-frame"><div class="hf-tl"></div><div class="hf-tr"></div><div class="hf-bl"></div><div class="hf-br"></div></div>
+  <div class="ttag ttag-1">NEURAL NETWORK</div>
+  <div class="ttag ttag-2">DEEP LEARNING</div>
+  <div class="ttag ttag-3">GPT-4o · CLAUDE · GEMINI</div>
+  <div class="ttag ttag-4">MULTIMODAL AI</div>
+  <div class="ttag ttag-5">TEXT · IMAGE · VIDEO</div>
+  <div class="ttag ttag-6">AI ECOSYSTEM 2025</div>
   <div class="hero-content">
-
-    <div class="hero-status">
-      <span class="status-dot"></span>
-      <span data-lang="zh" class="show">系統運行中 · 每日更新</span>
-      <span data-lang="en">SYSTEM ONLINE · UPDATED DAILY</span>
-    </div>
-
+    <div class="hero-eyebrow"><span class="e-dot"></span><span data-lang="zh" class="show">全球 AI 工具索引站 · 每日更新</span><span data-lang="en">GLOBAL AI TOOLS INDEX · UPDATED DAILY</span></div>
     <h1>
-      <span data-lang-block="zh" class="show">
-        <span class="line1">探索全球頂尖</span>
-        <span class="line2">AI 工具生態圈<span class="cursor"></span></span>
-      </span>
-      <span data-lang-block="en">
-        <span class="line1">Discover the World's Best</span>
-        <span class="line2">AI Tools Ecosystem<span class="cursor"></span></span>
-      </span>
+      <span data-lang-block="zh" class="show"><span class="h1-line1">探索全球頂尖</span><span class="h1-line2">AI 工具生態圈<span class="cursor-blink"></span></span></span>
+      <span data-lang-block="en"><span class="h1-line1">Discover the World's Best</span><span class="h1-line2">AI Tools Ecosystem<span class="cursor-blink"></span></span></span>
     </h1>
-
-    <p class="hero-sub">
-      <span data-lang="zh" class="show">精選 217 個 AI 應用，8 大分類，每日更新，幫你找到最強的 AI 工具</span>
-      <span data-lang="en">217 curated AI tools across 8 categories, updated daily to help you find the best</span>
-    </p>
-
+    <p class="hero-sub"><span data-lang="zh" class="show">精選 60+ 個頂尖 AI 應用，8 大分類，每日更新，找到最強的 AI 工具</span><span data-lang="en">60+ curated AI tools across 8 categories, updated daily to find the best</span></p>
     <div class="hero-badges">
-      <span class="hbadge"><span class="hbdot" style="background:var(--green)"></span>
-        <span data-lang="zh" class="show">每日更新</span><span data-lang="en">Daily Updated</span>
-      </span>
-      <span class="hbadge"><span class="hbdot" style="background:var(--cyan)"></span>
-        <span data-lang="zh" class="show">精選收錄</span><span data-lang="en">Curated</span>
-      </span>
-      <span class="hbadge"><span class="hbdot" style="background:var(--amber)"></span>
-        <span data-lang="zh" class="show">完全免費</span><span data-lang="en">Free to Use</span>
-      </span>
-      <span class="hbadge"><span class="hbdot" style="background:var(--purple)"></span>
-        <span data-lang="zh" class="show">雙語支援</span><span data-lang="en">Bilingual</span>
-      </span>
+      <span class="hb"><span class="hb-dot" style="background:var(--green)"></span><span data-lang="zh" class="show">每日更新</span><span data-lang="en">Daily Updated</span></span>
+      <span class="hb"><span class="hb-dot" style="background:var(--cyan)"></span><span data-lang="zh" class="show">精選收錄</span><span data-lang="en">Curated</span></span>
+      <span class="hb"><span class="hb-dot" style="background:var(--amber)"></span><span data-lang="zh" class="show">免費使用</span><span data-lang="en">Free to Use</span></span>
+      <span class="hb"><span class="hb-dot" style="background:var(--purple)"></span><span data-lang="zh" class="show">雙語支援</span><span data-lang="en">Bilingual</span></span>
     </div>
-
     <div class="hero-stats">
-      <div class="hstat">
-        <span class="hstat-num">217</span>
-        <div class="hstat-lbl"><span data-lang="zh" class="show">收錄工具</span><span data-lang="en">AI Tools</span></div>
-      </div>
-      <div class="hstat">
-        <span class="hstat-num">8</span>
-        <div class="hstat-lbl"><span data-lang="zh" class="show">工具分類</span><span data-lang="en">Categories</span></div>
-      </div>
-      <div class="hstat">
-        <span class="hstat-num">14</span>
-        <div class="hstat-lbl"><span data-lang="zh" class="show">本週新增</span><span data-lang="en">This Week</span></div>
-      </div>
-      <div class="hstat">
-        <span class="hstat-num" style="font-size:18px"><span data-lang="zh" class="show">每日</span><span data-lang="en">Daily</span></span>
-        <div class="hstat-lbl"><span data-lang="zh" class="show">持續更新</span><span data-lang="en">Updates</span></div>
-      </div>
+      <div class="hstat"><span class="hstat-num">60+</span><div class="hstat-lbl"><span data-lang="zh" class="show">收錄工具</span><span data-lang="en">AI Tools</span></div></div>
+      <div class="hstat"><span class="hstat-num">8</span><div class="hstat-lbl"><span data-lang="zh" class="show">工具分類</span><span data-lang="en">Categories</span></div></div>
+      <div class="hstat"><span class="hstat-num">14</span><div class="hstat-lbl"><span data-lang="zh" class="show">本週新增</span><span data-lang="en">This Week</span></div></div>
+      <div class="hstat"><span class="hstat-num" style="font-size:18px"><span data-lang="zh" class="show">每日</span><span data-lang="en">Daily</span></span><div class="hstat-lbl"><span data-lang="zh" class="show">持續更新</span><span data-lang="en">Updates</span></div></div>
     </div>
-
   </div>
 </div>
 
-<!-- ══ FILTER ══ -->
+<!-- FILTER -->
 <div class="filter-wrap">
   <button class="ftab on" data-filter="all">✦ <span data-lang="zh" class="show">全部</span><span data-lang="en">All</span></button>
   <button class="ftab" data-filter="hot">🔥 <span data-lang="zh" class="show">熱門</span><span data-lang="en">Hot</span></button>
@@ -473,537 +405,747 @@ nav a.active{color:var(--amber);}
   <button class="ftab" data-filter="api">⚙️ API</button>
   <button class="ftab" data-filter="open">📦 <span data-lang="zh" class="show">開源</span><span data-lang="en">Open Source</span></button>
 </div>
-
-<!-- ══ CONTENT ══ -->
 <div class="container">
-
-<!-- 輔助 macro：logo img + fallback -->
-<!-- logo URL 使用 Google favicon service (高清) 和各工具官方 CDN -->
-
-<!-- ╔══ 01 LLM ══╗ -->
 <div class="section" id="llm">
   <div class="sec-head">
-    <div class="sec-left">
-      <div class="sec-icon">🤖</div>
-      <div>
-        <div class="sec-title"><span class="acc">LLM</span>
-          <span data-lang="zh" class="show"> 大語言模型</span>
-          <span data-lang="en"> Language Models</span>
-        </div>
-        <div class="sec-sub">
-          <span data-lang="zh" class="show">對話 · 推理 · 多模態 · 知識問答</span>
-          <span data-lang="en">Chat · Reasoning · Multimodal · Q&A</span>
-        </div>
-      </div>
-    </div>
+    <div class="sec-left"><div class="sec-ico">🤖</div><div>
+      <div class="sec-title"><span class="acc">LLM</span><span data-lang="zh" class="show">大語言模型</span><span data-lang="en">Language Models</span></div>
+      <div class="sec-sub"><span data-lang="zh" class="show">對話 · 推理 · 多模態 · 知識問答</span><span data-lang="en">Chat · Reasoning · Multimodal · Q&A</span></div>
+    </div></div>
     <div class="sec-line"></div>
     <a class="see-all" href="#"><span data-lang="zh" class="show">查看全部 →</span><span data-lang="en">View All →</span></a>
-  </div>
-  <div class="grid">
+  </div><div class="grid">
 
     <a class="card cat-llm" href="https://claude.ai" target="_blank" data-tags="hot api">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=claude.ai&sz=64" alt="Claude" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🧠</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=anthropic.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-hot">HOT</span>
-      <div class="c-name">Claude</div>
+      <div class="c-name"><span data-lang="zh" class="show">Claude</span><span data-lang="en">Claude</span></div>
       <div class="c-desc"><span data-lang="zh" class="show">Anthropic 出品，200K 超長上下文，安全對齊，擅長分析與程式</span><span data-lang="en">By Anthropic. 200K context, safety-aligned, great for analysis & coding</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">對話</span><span data-lang="en">Chat</span></span><span class="c-tag"><span data-lang="zh" class="show">推理</span><span data-lang="en">Reasoning</span></span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">對話</span><span data-lang="en">Chat</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">推理</span><span data-lang="en">Reasoning</span></span>
+      </div>
     </a>
 
     <a class="card cat-llm" href="https://chat.openai.com" target="_blank" data-tags="hot api pro">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=chat.openai.com&sz=64" alt="ChatGPT" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">⚡</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=openai.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-hot">HOT</span>
-      <div class="c-name">ChatGPT</div>
+      <div class="c-name"><span data-lang="zh" class="show">ChatGPT</span><span data-lang="en">ChatGPT</span></div>
       <div class="c-desc"><span data-lang="zh" class="show">OpenAI 旗艦，GPT-4o 多模態，插件生態豐富，應用最廣泛</span><span data-lang="en">OpenAI flagship. GPT-4o multimodal, rich plugin ecosystem</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">多模態</span><span data-lang="en">Multimodal</span></span><span class="c-tag"><span data-lang="zh" class="show">插件</span><span data-lang="en">Plugins</span></span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">多模態</span><span data-lang="en">Multimodal</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">插件</span><span data-lang="en">Plugins</span></span>
+      </div>
     </a>
 
     <a class="card cat-llm" href="https://gemini.google.com" target="_blank" data-tags="new api">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=gemini.google.com&sz=64" alt="Gemini" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">💎</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06.png" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-new">NEW</span>
-      <div class="c-name">Gemini 2.5</div>
-      <div class="c-desc"><span data-lang="zh" class="show">Google DeepMind，百萬 Token 超長上下文，深度整合 Google</span><span data-lang="en">Google DeepMind. 1M token context, deep Google Workspace integration</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">多模態</span><span data-lang="en">Multimodal</span></span><span class="c-tag"><span data-lang="zh" class="show">長文本</span><span data-lang="en">Long context</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Gemini 2.5</span><span data-lang="en">Gemini 2.5</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">Google DeepMind，百萬 Token 超長上下文，深度整合 Google</span><span data-lang="en">Google DeepMind. 1M token context, deep Google integration</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">多模態</span><span data-lang="en">Multimodal</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">長文本</span><span data-lang="en">Long ctx</span></span>
+      </div>
     </a>
 
-    <a class="card cat-llm" href="https://www.deepseek.com" target="_blank" data-tags="hot open free zh">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=deepseek.com&sz=64" alt="DeepSeek" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🔬</div>
-      </div>
+    <a class="card cat-llm" href="https://www.google.com/s2/favicons?domain=deepseek.com&sz=128" target="_blank" data-tags="hot open free zh">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=deepseek.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-hot">HOT</span>
-      <div class="c-name">DeepSeek</div>
-      <div class="c-desc"><span data-lang="zh" class="show">國產高性能推理模型，開源友好，數學與程式能力頂尖</span><span data-lang="en">High-performance open-source model, top math & coding capabilities</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">開源</span><span data-lang="en">Open-source</span></span><span class="c-tag"><span data-lang="zh" class="show">推理</span><span data-lang="en">Reasoning</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">DeepSeek</span><span data-lang="en">DeepSeek</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">國產高性能推理，開源友好，數學與程式能力頂尖</span><span data-lang="en">High-performance open-source, top math & coding capabilities</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">開源</span><span data-lang="en">Open-src</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">推理</span><span data-lang="en">Reasoning</span></span>
+      </div>
     </a>
 
     <a class="card cat-llm" href="https://www.kimi.ai" target="_blank" data-tags="free zh hot">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=kimi.ai&sz=64" alt="Kimi" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🌙</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=kimi.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-free">FREE</span>
-      <div class="c-name">Kimi</div>
-      <div class="c-desc"><span data-lang="zh" class="show">月之暗面出品，超長文本理解，中文優化，支援大檔案解讀</span><span data-lang="en">Moonshot AI. Ultra-long context, Chinese-optimized, large file reading</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">中文</span><span data-lang="en">Chinese</span></span><span class="c-tag"><span data-lang="zh" class="show">長文本</span><span data-lang="en">Long context</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Kimi</span><span data-lang="en">Kimi</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">月之暗面，超長文本理解，中文優化，支援大檔案解讀</span><span data-lang="en">Moonshot AI. Ultra-long context, Chinese-optimized, large files</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">中文</span><span data-lang="en">Chinese</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">長文本</span><span data-lang="en">Long ctx</span></span>
+      </div>
     </a>
 
     <a class="card cat-llm" href="https://www.perplexity.ai" target="_blank" data-tags="hot api pro">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=perplexity.ai&sz=64" alt="Perplexity" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🔍</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=perplexity.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-hot">HOT</span>
-      <div class="c-name">Perplexity</div>
-      <div class="c-desc"><span data-lang="zh" class="show">AI 搜尋引擎，即時網路搜索，引用來源透明，研究首選</span><span data-lang="en">AI search engine. Real-time web search with cited sources, ideal for research</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">搜尋</span><span data-lang="en">Search</span></span><span class="c-tag"><span data-lang="zh" class="show">即時</span><span data-lang="en">Real-time</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Perplexity</span><span data-lang="en">Perplexity</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">AI 搜尋引擎，即時網路搜索，引用來源透明，研究首選</span><span data-lang="en">AI search engine. Real-time web search with cited sources</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">搜尋</span><span data-lang="en">Search</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">即時</span><span data-lang="en">Real-time</span></span>
+      </div>
     </a>
 
     <a class="card cat-llm" href="https://www.doubao.com" target="_blank" data-tags="free zh hot">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=doubao.com&sz=64" alt="豆包" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🫘</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=doubao.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-free">FREE</span>
       <div class="c-name"><span data-lang="zh" class="show">豆包</span><span data-lang="en">Doubao</span></div>
-      <div class="c-desc"><span data-lang="zh" class="show">字節跳動出品，完全免費，中文流暢，響應速度快</span><span data-lang="en">By ByteDance. Completely free, fluent Chinese, fast response speed</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">中文</span><span data-lang="en">Chinese</span></span><span class="c-tag"><span data-lang="zh" class="show">免費</span><span data-lang="en">Free</span></span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">字節跳動出品，完全免費，中文流暢，響應速度極快</span><span data-lang="en">By ByteDance. Completely free, fluent Chinese, ultra-fast response</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">中文</span><span data-lang="en">Chinese</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">免費</span><span data-lang="en">Free</span></span>
+      </div>
     </a>
 
     <a class="card cat-llm" href="https://grok.x.ai" target="_blank" data-tags="new pro">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=x.ai&sz=64" alt="Grok" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">𝕏</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=x.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-new">NEW</span>
-      <div class="c-name">Grok 3</div>
-      <div class="c-desc"><span data-lang="zh" class="show">xAI 出品，即時 X 平台資料，幽默風格，推理能力強</span><span data-lang="en">By xAI. Real-time X data, witty personality, strong reasoning capabilities</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">即時</span><span data-lang="en">Real-time</span></span><span class="c-tag"><span data-lang="zh" class="show">推理</span><span data-lang="en">Reasoning</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Grok 3</span><span data-lang="en">Grok 3</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">xAI 出品，即時 X 平台資料，推理能力強，幽默風格</span><span data-lang="en">By xAI. Real-time X data, strong reasoning, witty personality</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">即時</span><span data-lang="en">Real-time</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">推理</span><span data-lang="en">Reasoning</span></span>
+      </div>
     </a>
 
-  </div>
-</div>
+    <a class="card cat-llm" href="https://qwen.aliyun.com" target="_blank" data-tags="free zh hot open">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=tongyi.aliyun.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-free">FREE</span>
+      <div class="c-name"><span data-lang="zh" class="show">通義千問</span><span data-lang="en">Qwen</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">阿里巴巴開源旗艦，中文理解優秀，多模態強，可本地部署</span><span data-lang="en">By Alibaba. Open-source flagship, excellent Chinese, multimodal</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">開源</span><span data-lang="en">Open-src</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">中文</span><span data-lang="en">Chinese</span></span>
+      </div>
+    </a>
 
-<!-- AD 1 -->
-<div class="mid-ad" id="ad-1">
-  <div>
-    <span class="ad-badge">SPONSORED · AD_SLOT_01</span>
-    <h3><span data-lang="zh" class="show">🚀 在這裡展示你的 AI 產品或服務</span><span data-lang="en">🚀 Showcase Your AI Product or Service Here</span></h3>
-    <p><span data-lang="zh" class="show">頂部精選廣告位，觸達數萬名 AI 工具深度用戶 · 高轉化率精準投放</span><span data-lang="en">Premium ad slot. Reach tens of thousands of AI power users · High conversion rate</span></p>
+    <a class="card cat-llm" href="https://www.llama.com" target="_blank" data-tags="free open api hot">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=meta.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-free">FREE</span>
+      <div class="c-name"><span data-lang="zh" class="show">Llama 3.3</span><span data-lang="en">Llama 3.3</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">Meta 開源旗艦，可本地部署，企業可商用，社群生態最大</span><span data-lang="en">Meta open-source flagship. Local deployment, commercial use</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">開源</span><span data-lang="en">Open-src</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">本地</span><span data-lang="en">Local</span></span>
+      </div>
+    </a>
+
+    <a class="card cat-llm" href="https://mistral.ai" target="_blank" data-tags="open free api new">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=mistral.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-new">NEW</span>
+      <div class="c-name"><span data-lang="zh" class="show">Mistral</span><span data-lang="en">Mistral</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">歐洲開源強模型，輕量高效，多語言優秀，隱私保護優先</span><span data-lang="en">European open-source model. Lightweight, multilingual, privacy-first</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">開源</span><span data-lang="en">Open-src</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">隱私</span><span data-lang="en">Privacy</span></span>
+      </div>
+    </a>
+
+    <a class="card cat-llm" href="https://yiyan.baidu.com" target="_blank" data-tags="zh free hot">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=yiyan.baidu.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-free">FREE</span>
+      <div class="c-name"><span data-lang="zh" class="show">文心一言</span><span data-lang="en">ERNIE Bot</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">百度出品，ERNIE 4.0 大模型，中文理解出色，深度搜索整合</span><span data-lang="en">By Baidu. ERNIE 4.0, excellent Chinese, integrated search</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">中文</span><span data-lang="en">Chinese</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">搜索</span><span data-lang="en">Search</span></span>
+      </div>
+    </a>
+</div></div>
+<div class="mid-ad">
+  <div><span class="ad-badge">SPONSORED · AD_SLOT_01</span>
+    <h3><span data-lang="zh" class="show">🚀 在這裡展示你的 AI 產品或服務</span><span data-lang="en">🚀 Showcase Your AI Product Here</span></h3>
+    <p><span data-lang="zh" class="show">頂部精選廣告位，觸達數萬名 AI 工具深度用戶 · 高轉化率精準投放</span><span data-lang="en">Premium ad slot. Reach tens of thousands of AI power users · High conversion</span></p>
   </div>
   <div class="ad-right">
     <span class="ad-pill"><span data-lang="zh" class="show">黃金廣告位</span><span data-lang="en">Gold Slot</span></span>
     <a class="ad-btn" href="#"><span data-lang="zh" class="show">立即投放</span><span data-lang="en">Advertise Now</span></a>
   </div>
-</div>
-
-<!-- ╔══ 02 AI繪圖 ══╗ -->
-<div class="section" id="img">
+</div><div class="section" id="img">
   <div class="sec-head">
-    <div class="sec-left">
-      <div class="sec-icon">🎨</div>
-      <div>
-        <div class="sec-title"><span class="acc">IMG</span><span data-lang="zh" class="show"> AI 繪圖</span><span data-lang="en"> AI Image</span></div>
-        <div class="sec-sub"><span data-lang="zh" class="show">文生圖 · 圖像編輯 · 風格生成</span><span data-lang="en">Text-to-Image · Editing · Style Generation</span></div>
-      </div>
-    </div>
+    <div class="sec-left"><div class="sec-ico">🎨</div><div>
+      <div class="sec-title"><span class="acc">IMG</span><span data-lang="zh" class="show">AI 繪圖</span><span data-lang="en">AI Image</span></div>
+      <div class="sec-sub"><span data-lang="zh" class="show">文生圖 · 圖像編輯 · 風格生成</span><span data-lang="en">Text-to-Image · Editing · Style Generation</span></div>
+    </div></div>
     <div class="sec-line"></div>
     <a class="see-all" href="#"><span data-lang="zh" class="show">查看全部 →</span><span data-lang="en">View All →</span></a>
-  </div>
-  <div class="grid">
+  </div><div class="grid">
 
     <a class="card cat-img" href="https://www.midjourney.com" target="_blank" data-tags="hot pro">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=midjourney.com&sz=64" alt="Midjourney" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🖌️</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=midjourney.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-hot">HOT</span>
-      <div class="c-name">Midjourney</div>
-      <div class="c-desc"><span data-lang="zh" class="show">藝術質量最高，風格多樣，商業設計首選，$10/月起</span><span data-lang="en">Highest art quality, diverse styles, top choice for commercial design. $10/mo</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">文生圖</span><span data-lang="en">Text-to-Image</span></span><span class="c-tag"><span data-lang="zh" class="show">高質量</span><span data-lang="en">High Quality</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Midjourney</span><span data-lang="en">Midjourney</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">藝術質量最高，風格多樣，商業設計首選，$10/月起</span><span data-lang="en">Highest art quality, diverse styles, top choice for commercial design</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">文生圖</span><span data-lang="en">T2I</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">商業</span><span data-lang="en">Commercial</span></span>
+      </div>
     </a>
 
     <a class="card cat-img" href="https://stability.ai" target="_blank" data-tags="free open">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=stability.ai&sz=64" alt="Stable Diffusion" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">⚙️</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=stability.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-free">FREE</span>
-      <div class="c-name">Stable Diffusion</div>
-      <div class="c-desc"><span data-lang="zh" class="show">開源圖像生成，可本地部署，高度客製化，完全免費</span><span data-lang="en">Open-source image generation. Local deployment, fully customizable, free</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">開源</span><span data-lang="en">Open-source</span></span><span class="c-tag"><span data-lang="zh" class="show">本地</span><span data-lang="en">Local</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Stable Diffusion</span><span data-lang="en">Stable Diffusion</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">開源圖像生成，可本地部署，高度客製化，完全免費</span><span data-lang="en">Open-source, local deployment, fully customizable, free</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">開源</span><span data-lang="en">Open-src</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">本地</span><span data-lang="en">Local</span></span>
+      </div>
     </a>
 
     <a class="card cat-img" href="https://firefly.adobe.com" target="_blank" data-tags="pro hot api">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=adobe.com&sz=64" alt="Adobe Firefly" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">✨</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=adobe.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-pro">PRO</span>
-      <div class="c-name">Adobe Firefly</div>
-      <div class="c-desc"><span data-lang="zh" class="show">商業版權最安全，基於授權圖庫訓練，無縫整合 PS</span><span data-lang="en">Safest for commercial use, trained on licensed images, seamless PS integration</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">商業</span><span data-lang="en">Commercial</span></span><span class="c-tag"><span data-lang="zh" class="show">版權安全</span><span data-lang="en">Copyright-safe</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Adobe Firefly</span><span data-lang="en">Adobe Firefly</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">商業版權最安全，基於授權圖庫訓練，無縫整合 Photoshop</span><span data-lang="en">Safest for commercial use, trained on licensed images, integrates with PS</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">版權安全</span><span data-lang="en">Copyright</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">PS</span><span data-lang="en">Photoshop</span></span>
+      </div>
     </a>
 
     <a class="card cat-img" href="https://ideogram.ai" target="_blank" data-tags="new free">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=ideogram.ai&sz=64" alt="Ideogram" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🔤</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=ideogram.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-new">NEW</span>
-      <div class="c-name">Ideogram 2</div>
-      <div class="c-desc"><span data-lang="zh" class="show">文字渲染最準確的 AI 繪圖工具，字型設計必備首選</span><span data-lang="en">Most accurate text rendering in AI art, essential for typography design</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">文字</span><span data-lang="en">Typography</span></span><span class="c-tag"><span data-lang="zh" class="show">設計</span><span data-lang="en">Design</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Ideogram 2</span><span data-lang="en">Ideogram 2</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">文字渲染最準確的 AI 繪圖工具，字型設計必備首選</span><span data-lang="en">Most accurate text rendering, essential for typography design</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">文字</span><span data-lang="en">Typography</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">設計</span><span data-lang="en">Design</span></span>
+      </div>
     </a>
 
     <a class="card cat-img" href="https://leonardo.ai" target="_blank" data-tags="free hot api">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=leonardo.ai&sz=64" alt="Leonardo AI" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🎭</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=leonardo.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-free">FREE</span>
-      <div class="c-name">Leonardo AI</div>
-      <div class="c-desc"><span data-lang="zh" class="show">免費額度最多，遊戲風格強，提供大量免費生成次數</span><span data-lang="en">Most free credits, excellent for game art, generous daily generation quota</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">免費</span><span data-lang="en">Free</span></span><span class="c-tag"><span data-lang="zh" class="show">遊戲</span><span data-lang="en">Game Art</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Leonardo AI</span><span data-lang="en">Leonardo AI</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">免費額度最多，遊戲風格強，提供大量每日免費生成次數</span><span data-lang="en">Most free credits, excellent for game art, generous daily quota</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">免費</span><span data-lang="en">Free</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">遊戲</span><span data-lang="en">Game Art</span></span>
+      </div>
     </a>
 
     <a class="card cat-img" href="https://www.canva.com" target="_blank" data-tags="free zh hot">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=canva.com&sz=64" alt="Canva" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🖼️</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=canva.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-free">FREE</span>
-      <div class="c-name">Canva AI</div>
-      <div class="c-desc"><span data-lang="zh" class="show">非設計師首選，豐富模板，AI 生成與設計工具一體化</span><span data-lang="en">Best for non-designers, rich templates, AI generation + design all-in-one</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">設計</span><span data-lang="en">Design</span></span><span class="c-tag"><span data-lang="zh" class="show">模板</span><span data-lang="en">Templates</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Canva AI</span><span data-lang="en">Canva AI</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">非設計師首選，豐富模板，AI 生成與設計工具一體化</span><span data-lang="en">Best for non-designers, rich templates, all-in-one design platform</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">設計</span><span data-lang="en">Design</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">模板</span><span data-lang="en">Templates</span></span>
+      </div>
     </a>
 
-  </div>
-</div>
+    <a class="card cat-img" href="https://flux1.ai" target="_blank" data-tags="new hot api open">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=blackforestlabs.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-new">NEW</span>
+      <div class="c-name"><span data-lang="zh" class="show">Flux AI</span><span data-lang="en">Flux AI</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">新世代圖像模型，真實感超強，超越 SD 成為新標準</span><span data-lang="en">Next-gen image model with ultra-realistic output, new benchmark</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">真實感</span><span data-lang="en">Realistic</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">新銳</span><span data-lang="en">New Gen</span></span>
+      </div>
+    </a>
 
-<!-- AD 2 -->
-<div class="mid-ad ad-purple" id="ad-2">
-  <div>
-    <span class="ad-badge">SPONSORED · AD_SLOT_02</span>
-    <h3><span data-lang="zh" class="show">💼 內容中部廣告位 — 高意向用戶精準曝光</span><span data-lang="en">💼 Mid-Content Ad Slot — High-Intent User Exposure</span></h3>
-    <p><span data-lang="zh" class="show">位於核心內容區域，用戶瀏覽意向最強 · 支援自定義橫幅圖片與連結</span><span data-lang="en">Placed in core content area with highest user intent · Supports custom banners & links</span></p>
+    <a class="card cat-img" href="https://www.recraft.ai" target="_blank" data-tags="new free api">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=recraft.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-new">NEW</span>
+      <div class="c-name"><span data-lang="zh" class="show">Recraft</span><span data-lang="en">Recraft</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">向量圖 + 品牌設計 AI，風格一致性極強，設計師必備</span><span data-lang="en">Vector + brand design AI, perfect style consistency, designers choice</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">向量</span><span data-lang="en">Vector</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">品牌</span><span data-lang="en">Brand</span></span>
+      </div>
+    </a>
+
+    <a class="card cat-img" href="https://playground.com" target="_blank" data-tags="free hot">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=playground.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-free">FREE</span>
+      <div class="c-name"><span data-lang="zh" class="show">Playground AI</span><span data-lang="en">Playground AI</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">社群驅動 AI 繪圖，免費功能強大，支援 Stable Diffusion 及更多</span><span data-lang="en">Community-driven AI art, powerful free features, SD and more</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">免費</span><span data-lang="en">Free</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">社群</span><span data-lang="en">Community</span></span>
+      </div>
+    </a>
+</div></div>
+<div class="mid-ad ad-purple">
+  <div><span class="ad-badge">SPONSORED · AD_SLOT_02</span>
+    <h3><span data-lang="zh" class="show">💼 內容中部廣告位 — 高意向用戶精準曝光</span><span data-lang="en">💼 Mid-Content Ad — High-Intent User Exposure</span></h3>
+    <p><span data-lang="zh" class="show">位於核心內容區域，用戶瀏覽意向最強 · 支援自定義橫幅圖片與連結</span><span data-lang="en">Placed in core content with highest intent · Supports custom banners & links</span></p>
   </div>
   <div class="ad-right">
-    <span class="ad-pill" style="color:var(--purple);border-color:rgba(167,139,250,.3)"><span data-lang="zh" class="show">精選位置</span><span data-lang="en">Prime Spot</span></span>
-    <a class="ad-btn" href="#" style="background:var(--purple)"><span data-lang="zh" class="show">洽談投放</span><span data-lang="en">Contact Us</span></a>
+    <span class="ad-pill" style="color:var(--purple);border-color:rgba(124,77,255,.3)"><span data-lang="zh" class="show">精選位置</span><span data-lang="en">Prime Spot</span></span>
+    <a class="ad-btn" href="#" style="background:linear-gradient(90deg,var(--purple),var(--pink))"><span data-lang="zh" class="show">洽談投放</span><span data-lang="en">Contact Us</span></a>
   </div>
-</div>
-
-<!-- ╔══ 03 AI編程 ══╗ -->
-<div class="section" id="code">
+</div><div class="section" id="code">
   <div class="sec-head">
-    <div class="sec-left">
-      <div class="sec-icon">💻</div>
-      <div>
-        <div class="sec-title"><span class="acc">DEV</span><span data-lang="zh" class="show"> AI 編程</span><span data-lang="en"> AI Coding</span></div>
-        <div class="sec-sub"><span data-lang="zh" class="show">程式補全 · 除錯 · 全端開發</span><span data-lang="en">Code Completion · Debugging · Full-Stack</span></div>
-      </div>
-    </div>
+    <div class="sec-left"><div class="sec-ico">💻</div><div>
+      <div class="sec-title"><span class="acc">DEV</span><span data-lang="zh" class="show">AI 編程</span><span data-lang="en">AI Coding</span></div>
+      <div class="sec-sub"><span data-lang="zh" class="show">程式補全 · 除錯 · 全端開發</span><span data-lang="en">Code Completion · Debugging · Full-Stack</span></div>
+    </div></div>
     <div class="sec-line"></div>
     <a class="see-all" href="#"><span data-lang="zh" class="show">查看全部 →</span><span data-lang="en">View All →</span></a>
-  </div>
-  <div class="grid">
+  </div><div class="grid">
 
     <a class="card cat-code" href="https://github.com/features/copilot" target="_blank" data-tags="hot pro api">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="GitHub Copilot" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🐙</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=github.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-hot">HOT</span>
-      <div class="c-name">GitHub Copilot</div>
-      <div class="c-desc"><span data-lang="zh" class="show">IDE 內程式補全，多語言支援，深度 GitHub 整合，$10/月</span><span data-lang="en">In-IDE code completion, multi-language support, deep GitHub integration. $10/mo</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">補全</span><span data-lang="en">Completion</span></span><span class="c-tag">IDE</span></div>
+      <div class="c-name"><span data-lang="zh" class="show">GitHub Copilot</span><span data-lang="en">GitHub Copilot</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">IDE 內程式補全，多語言支援，深度 GitHub 整合，$10/月</span><span data-lang="en">In-IDE code completion, multi-language, deep GitHub integration. $10/mo</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">補全</span><span data-lang="en">Completion</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">IDE</span><span data-lang="en">IDE</span></span>
+      </div>
     </a>
 
     <a class="card cat-code" href="https://cursor.sh" target="_blank" data-tags="hot pro api">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=cursor.sh&sz=64" alt="Cursor" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🖱️</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=cursor.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-hot">HOT</span>
-      <div class="c-name">Cursor</div>
+      <div class="c-name"><span data-lang="zh" class="show">Cursor</span><span data-lang="en">Cursor</span></div>
       <div class="c-desc"><span data-lang="zh" class="show">AI 原生程式碼編輯器，對話式開發，全程式庫理解能力強</span><span data-lang="en">AI-native code editor, conversational dev, full codebase understanding</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">編輯器</span><span data-lang="en">Editor</span></span><span class="c-tag"><span data-lang="zh" class="show">對話</span><span data-lang="en">Chat</span></span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">編輯器</span><span data-lang="en">Editor</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">對話</span><span data-lang="en">Chat</span></span>
+      </div>
     </a>
 
     <a class="card cat-code" href="https://bolt.new" target="_blank" data-tags="new free hot">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=bolt.new&sz=64" alt="Bolt.new" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">⚡</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=bolt.new&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-new">NEW</span>
-      <div class="c-name">Bolt.new</div>
-      <div class="c-desc"><span data-lang="zh" class="show">自然語言全端開發，10 分鐘做出完整 Web 應用</span><span data-lang="en">Natural language full-stack dev. Build a complete web app in 10 minutes</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">全端</span><span data-lang="en">Full-Stack</span></span><span class="c-tag"><span data-lang="zh" class="show">快速</span><span data-lang="en">Fast</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Bolt.new</span><span data-lang="en">Bolt.new</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">自然語言全端開發，10 分鐘做出完整 Web 應用，超快速</span><span data-lang="en">Natural language full-stack dev. Build a complete web app in 10 minutes</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">全端</span><span data-lang="en">Full-Stack</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">快速</span><span data-lang="en">Fast</span></span>
+      </div>
     </a>
 
     <a class="card cat-code" href="https://v0.dev" target="_blank" data-tags="new free api">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=v0.dev&sz=64" alt="v0.dev" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">∅</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=v0.dev&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-new">NEW</span>
-      <div class="c-name">v0.dev</div>
-      <div class="c-desc"><span data-lang="zh" class="show">Vercel 出品，AI 前端 UI 生成，React 組件一鍵生成</span><span data-lang="en">By Vercel. AI frontend UI generation, one-click React component creation</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">前端</span><span data-lang="en">Frontend</span></span><span class="c-tag">React</span></div>
+      <div class="c-name"><span data-lang="zh" class="show">v0.dev</span><span data-lang="en">v0.dev</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">Vercel 出品，AI 前端 UI 生成，React 組件一鍵生成</span><span data-lang="en">By Vercel. AI frontend UI generation, one-click React components</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">前端</span><span data-lang="en">Frontend</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">React</span><span data-lang="en">React</span></span>
+      </div>
     </a>
 
-    <a class="card cat-code" href="https://codeium.com/windsurf" target="_blank" data-tags="free new">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=codeium.com&sz=64" alt="Windsurf" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🏄</div>
-      </div>
+    <a class="card cat-code" href="https://codeium.com/windsurf" target="_blank" data-tags="free new hot">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=windsurf.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-free">FREE</span>
-      <div class="c-name">Windsurf</div>
-      <div class="c-desc"><span data-lang="zh" class="show">Codeium 推出，免費版功能強大，AI 程式 IDE 新銳</span><span data-lang="en">By Codeium. Powerful free tier, rising star in AI coding IDEs</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">免費</span><span data-lang="en">Free</span></span><span class="c-tag">IDE</span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Windsurf</span><span data-lang="en">Windsurf</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">Codeium 推出，免費版功能強大，成長最快的 AI 程式 IDE</span><span data-lang="en">By Codeium. Powerful free tier, fastest-growing AI coding IDE</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">免費</span><span data-lang="en">Free</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">IDE</span><span data-lang="en">IDE</span></span>
+      </div>
     </a>
 
     <a class="card cat-code" href="https://www.replit.com" target="_blank" data-tags="free hot api">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=replit.com&sz=64" alt="Replit" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🔄</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=replit.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-free">FREE</span>
-      <div class="c-name">Replit Agent</div>
-      <div class="c-desc"><span data-lang="zh" class="show">線上 IDE + AI，無需配置直接運行，協作開發部署一體</span><span data-lang="en">Online IDE + AI. Run instantly with no setup, collaborative dev & deploy</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">線上</span><span data-lang="en">Online</span></span><span class="c-tag"><span data-lang="zh" class="show">協作</span><span data-lang="en">Collab</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Replit Agent</span><span data-lang="en">Replit Agent</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">線上 IDE + AI，無需配置直接運行，協作開發部署一體化</span><span data-lang="en">Online IDE + AI. Zero setup, run instantly, collaborative dev & deploy</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">線上</span><span data-lang="en">Online</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">協作</span><span data-lang="en">Collab</span></span>
+      </div>
     </a>
 
-  </div>
-</div>
+    <a class="card cat-code" href="https://continue.dev" target="_blank" data-tags="free open api new">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=continue.dev&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-free">FREE</span>
+      <div class="c-name"><span data-lang="zh" class="show">Continue.dev</span><span data-lang="en">Continue.dev</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">開源 AI 程式助手，支援任意 LLM，VS Code / JetBrains 插件</span><span data-lang="en">Open-source AI coding assistant, supports any LLM, VS Code plugin</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">開源</span><span data-lang="en">Open-src</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">VS Code</span><span data-lang="en">VS Code</span></span>
+      </div>
+    </a>
 
-<!-- AD 3 -->
-<div class="mid-ad ad-blue" id="ad-3">
-  <div>
-    <span class="ad-badge">SPONSORED · AD_SLOT_03</span>
+    <a class="card cat-code" href="https://aider.chat" target="_blank" data-tags="free open api">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=aider.chat&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-free">FREE</span>
+      <div class="c-name"><span data-lang="zh" class="show">Aider</span><span data-lang="en">Aider</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">終端機 AI 結對編程，Git 整合自動提交，開發者首選工具</span><span data-lang="en">Terminal AI pair programmer, git auto-commit, developers favorite</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">終端機</span><span data-lang="en">Terminal</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">Git</span><span data-lang="en">Git</span></span>
+      </div>
+    </a>
+</div></div>
+<div class="mid-ad ad-blue">
+  <div><span class="ad-badge">SPONSORED · AD_SLOT_03</span>
     <h3><span data-lang="zh" class="show">📣 廣告位招募中 — 聯繫我們投放廣告</span><span data-lang="en">📣 Ad Slot Available — Contact Us to Advertise</span></h3>
-    <p><span data-lang="zh" class="show">多種廣告套餐可選，按月或按季投放 · 數據透明 · 支援退款保障</span><span data-lang="en">Flexible plans, monthly or quarterly · Transparent reporting · Satisfaction guaranteed</span></p>
+    <p><span data-lang="zh" class="show">多種套餐可選，按月或按季投放 · 數據透明 · 滿意度保障</span><span data-lang="en">Flexible monthly or quarterly plans · Transparent reporting · Satisfaction guaranteed</span></p>
   </div>
   <div class="ad-right">
-    <span class="ad-pill" style="color:var(--blue);border-color:rgba(96,165,250,.3)"><span data-lang="zh" class="show">可自定義</span><span data-lang="en">Customizable</span></span>
-    <a class="ad-btn" href="#" style="background:var(--blue)"><span data-lang="zh" class="show">了解詳情</span><span data-lang="en">Learn More</span></a>
+    <span class="ad-pill" style="color:var(--blue);border-color:rgba(30,144,255,.3)"><span data-lang="zh" class="show">可自定義</span><span data-lang="en">Customizable</span></span>
+    <a class="ad-btn" href="#" style="background:linear-gradient(90deg,var(--blue),var(--teal))"><span data-lang="zh" class="show">了解詳情</span><span data-lang="en">Learn More</span></a>
   </div>
-</div>
-
-<!-- ╔══ 04 視頻生成 ══╗ -->
-<div class="section" id="vid">
+</div><div class="section" id="vid">
   <div class="sec-head">
-    <div class="sec-left">
-      <div class="sec-icon">🎬</div>
-      <div>
-        <div class="sec-title"><span class="acc">VID</span><span data-lang="zh" class="show"> 視頻生成</span><span data-lang="en"> AI Video</span></div>
-        <div class="sec-sub"><span data-lang="zh" class="show">文生視頻 · 數字人 · 視頻編輯</span><span data-lang="en">Text-to-Video · Digital Human · Editing</span></div>
-      </div>
-    </div>
+    <div class="sec-left"><div class="sec-ico">🎬</div><div>
+      <div class="sec-title"><span class="acc">VID</span><span data-lang="zh" class="show">視頻生成</span><span data-lang="en">AI Video</span></div>
+      <div class="sec-sub"><span data-lang="zh" class="show">文生視頻 · 數字人 · 視頻編輯</span><span data-lang="en">Text-to-Video · Digital Human · Editing</span></div>
+    </div></div>
     <div class="sec-line"></div>
     <a class="see-all" href="#"><span data-lang="zh" class="show">查看全部 →</span><span data-lang="en">View All →</span></a>
-  </div>
-  <div class="grid">
+  </div><div class="grid">
 
     <a class="card cat-vid" href="https://sora.com" target="_blank" data-tags="hot pro new">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=sora.com&sz=64" alt="Sora" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🌀</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=openai.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-hot">HOT</span>
-      <div class="c-name">Sora</div>
-      <div class="c-desc"><span data-lang="zh" class="show">OpenAI 文生視頻，60秒高質量，物理仿真效果逼真</span><span data-lang="en">OpenAI text-to-video. Up to 60s, high quality with realistic physics simulation</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">文生視頻</span><span data-lang="en">Text-to-Video</span></span><span class="c-tag"><span data-lang="zh" class="show">長視頻</span><span data-lang="en">Long Video</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Sora</span><span data-lang="en">Sora</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">OpenAI 文生視頻，60秒高質量輸出，物理仿真效果逼真</span><span data-lang="en">OpenAI text-to-video. Up to 60s, high quality with realistic physics</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">文生視頻</span><span data-lang="en">T2V</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">長視頻</span><span data-lang="en">Long Video</span></span>
+      </div>
     </a>
 
     <a class="card cat-vid" href="https://runwayml.com" target="_blank" data-tags="hot pro api">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=runwayml.com&sz=64" alt="Runway" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🎞️</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=runwayml.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-pro">PRO</span>
-      <div class="c-name">Runway Gen-3</div>
-      <div class="c-desc"><span data-lang="zh" class="show">專業級 AI 視頻工具，電影感強，多種創意編輯功能</span><span data-lang="en">Professional AI video tool, cinematic quality, rich creative editing features</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">電影感</span><span data-lang="en">Cinematic</span></span><span class="c-tag"><span data-lang="zh" class="show">專業</span><span data-lang="en">Pro</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Runway Gen-3</span><span data-lang="en">Runway Gen-3</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">專業級 AI 視頻工具，電影感極強，多種創意編輯功能</span><span data-lang="en">Professional AI video, cinematic quality, rich creative editing features</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">電影感</span><span data-lang="en">Cinematic</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">專業</span><span data-lang="en">Pro</span></span>
+      </div>
     </a>
 
     <a class="card cat-vid" href="https://www.heygen.com" target="_blank" data-tags="hot pro zh">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=heygen.com&sz=64" alt="HeyGen" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🤖</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=heygen.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-hot">HOT</span>
-      <div class="c-name">HeyGen</div>
-      <div class="c-desc"><span data-lang="zh" class="show">AI 數字人，多語言配音，一鍵生成行銷視頻</span><span data-lang="en">AI avatars, multilingual voiceover, one-click marketing video generation</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">數字人</span><span data-lang="en">Avatar</span></span><span class="c-tag"><span data-lang="zh" class="show">配音</span><span data-lang="en">Voiceover</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">HeyGen</span><span data-lang="en">HeyGen</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">AI 數字人，多語言配音，一鍵生成行銷視頻，商業首選</span><span data-lang="en">AI avatars, multilingual voiceover, one-click marketing video generation</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">數字人</span><span data-lang="en">Avatar</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">配音</span><span data-lang="en">Voiceover</span></span>
+      </div>
     </a>
 
     <a class="card cat-vid" href="https://pika.art" target="_blank" data-tags="new free hot">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=pika.art&sz=64" alt="Pika" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">✦</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=pika.art&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-new">NEW</span>
-      <div class="c-name">Pika 2.2</div>
+      <div class="c-name"><span data-lang="zh" class="show">Pika 2.2</span><span data-lang="en">Pika 2.2</span></div>
       <div class="c-desc"><span data-lang="zh" class="show">新手友好，創意短片生成，動畫效果豐富，快速上手</span><span data-lang="en">Beginner-friendly, creative short video generation, rich animation effects</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">短片</span><span data-lang="en">Short Video</span></span><span class="c-tag"><span data-lang="zh" class="show">動畫</span><span data-lang="en">Animation</span></span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">短片</span><span data-lang="en">Short Video</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">動畫</span><span data-lang="en">Animation</span></span>
+      </div>
     </a>
 
     <a class="card cat-vid" href="https://kling.kuaishou.com" target="_blank" data-tags="hot free zh">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=kling.ai&sz=64" alt="可靈" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🎥</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=kling.kuaishou.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-hot">HOT</span>
       <div class="c-name"><span data-lang="zh" class="show">可靈 AI</span><span data-lang="en">Kling AI</span></div>
-      <div class="c-desc"><span data-lang="zh" class="show">快手出品，國產最強視頻生成，每日免費可用</span><span data-lang="en">By Kuaishou. Top Chinese AI video generator with daily free quota</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">免費</span><span data-lang="en">Free</span></span><span class="c-tag"><span data-lang="zh" class="show">國產</span><span data-lang="en">Chinese</span></span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">快手出品，國產最強視頻生成，品質媲美 Sora，每日免費</span><span data-lang="en">By Kuaishou. Chinas top AI video, Sora-level quality, daily free quota</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">國產</span><span data-lang="en">Chinese</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">免費</span><span data-lang="en">Free</span></span>
+      </div>
     </a>
 
     <a class="card cat-vid" href="https://hailuoai.com" target="_blank" data-tags="free zh new">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=hailuoai.com&sz=64" alt="海螺" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🐋</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=hailuoai.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-free">FREE</span>
       <div class="c-name"><span data-lang="zh" class="show">海螺 AI</span><span data-lang="en">Hailuo AI</span></div>
-      <div class="c-desc"><span data-lang="zh" class="show">MiniMax 出品，中文優化，每日免費額度，質量優秀</span><span data-lang="en">By MiniMax. Chinese-optimized, daily free credits, excellent output quality</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">免費</span><span data-lang="en">Free</span></span><span class="c-tag"><span data-lang="zh" class="show">中文</span><span data-lang="en">Chinese</span></span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">MiniMax 出品，中文優化，每日免費額度，質量持續提升</span><span data-lang="en">By MiniMax. Chinese-optimized, daily free credits, improving quality</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">免費</span><span data-lang="en">Free</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">中文</span><span data-lang="en">Chinese</span></span>
+      </div>
     </a>
 
-  </div>
-</div>
-
-<!-- ╔══ 05 辦公效率 ══╗ -->
-<div class="section" id="off">
-  <div class="sec-head">
-    <div class="sec-left">
-      <div class="sec-icon">⚡</div>
-      <div>
-        <div class="sec-title"><span class="acc">BIZ</span><span data-lang="zh" class="show"> 辦公效率</span><span data-lang="en"> Productivity</span></div>
-        <div class="sec-sub"><span data-lang="zh" class="show">PPT · 會議記錄 · 自動化 · 資料分析</span><span data-lang="en">Presentation · Meeting · Automation · Data</span></div>
+    <a class="card cat-vid" href="https://lumalabs.ai" target="_blank" data-tags="hot pro new api">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=lumalabs.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-new">NEW</span>
+      <div class="c-name"><span data-lang="zh" class="show">Luma Dream</span><span data-lang="en">Luma Dream</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">圖生視頻最流暢，物理感強，支援 3D 場景生成和編輯</span><span data-lang="en">Smoothest image-to-video, strong physics, 3D scene generation</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">圖生視頻</span><span data-lang="en">I2V</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">3D</span><span data-lang="en">3D</span></span>
       </div>
-    </div>
+    </a>
+
+    <a class="card cat-vid" href="https://veo.google.com" target="_blank" data-tags="new pro hot">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=deepmind.google&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-new">NEW</span>
+      <div class="c-name"><span data-lang="zh" class="show">Veo 2</span><span data-lang="en">Veo 2</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">Google DeepMind 最新視頻模型，電影品質，1080p 輸出</span><span data-lang="en">Google DeepMind latest video model, cinema quality, 1080p output</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">電影級</span><span data-lang="en">Cinema</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">1080p</span><span data-lang="en">1080p</span></span>
+      </div>
+    </a>
+</div></div><div class="section" id="aud">
+  <div class="sec-head">
+    <div class="sec-left"><div class="sec-ico">🎵</div><div>
+      <div class="sec-title"><span class="acc">AUD</span><span data-lang="zh" class="show">語音音頻</span><span data-lang="en">Audio & Voice</span></div>
+      <div class="sec-sub"><span data-lang="zh" class="show">語音克隆 · AI 音樂 · 語音轉文字</span><span data-lang="en">Voice Clone · AI Music · Speech-to-Text</span></div>
+    </div></div>
     <div class="sec-line"></div>
     <a class="see-all" href="#"><span data-lang="zh" class="show">查看全部 →</span><span data-lang="en">View All →</span></a>
-  </div>
-  <div class="grid">
+  </div><div class="grid">
+
+    <a class="card cat-aud" href="https://elevenlabs.io" target="_blank" data-tags="hot pro api">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=elevenlabs.io&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-hot">HOT</span>
+      <div class="c-name"><span data-lang="zh" class="show">ElevenLabs</span><span data-lang="en">ElevenLabs</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">最逼真語音克隆，多語言配音，播客製作與有聲書首選</span><span data-lang="en">Most realistic voice cloning, multilingual, podcast production</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">語音克隆</span><span data-lang="en">Voice Clone</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">API</span><span data-lang="en">API</span></span>
+      </div>
+    </a>
+
+    <a class="card cat-aud" href="https://suno.com" target="_blank" data-tags="hot free zh new">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=suno.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-hot">HOT</span>
+      <div class="c-name"><span data-lang="zh" class="show">Suno AI</span><span data-lang="en">Suno AI</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">AI 作曲神器，輸入歌詞即生成完整歌曲，免費試用額度充足</span><span data-lang="en">AI music composer, input lyrics to generate full songs, free tier</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">作曲</span><span data-lang="en">Compose</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">音樂</span><span data-lang="en">Music</span></span>
+      </div>
+    </a>
+
+    <a class="card cat-aud" href="https://www.udio.com" target="_blank" data-tags="hot free new">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=udio.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-new">NEW</span>
+      <div class="c-name"><span data-lang="zh" class="show">Udio</span><span data-lang="en">Udio</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">高品質 AI 音樂生成，風格覆蓋廣泛，媲美 Suno 的強力競品</span><span data-lang="en">High-quality AI music, diverse styles, strong Suno competitor</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">音樂</span><span data-lang="en">Music</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">高品質</span><span data-lang="en">HQ</span></span>
+      </div>
+    </a>
+
+    <a class="card cat-aud" href="https://openai.com/research/whisper" target="_blank" data-tags="free open api hot">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=openai.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-free">FREE</span>
+      <div class="c-name"><span data-lang="zh" class="show">Whisper</span><span data-lang="en">Whisper</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">OpenAI 開源語音轉文字，多語言識別準確率業界頂尖</span><span data-lang="en">OpenAI open-source speech-to-text, top multilingual accuracy</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">語音轉文字</span><span data-lang="en">STT</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">開源</span><span data-lang="en">Open-src</span></span>
+      </div>
+    </a>
+
+    <a class="card cat-aud" href="https://www.descript.com" target="_blank" data-tags="pro hot api">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=descript.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-pro">PRO</span>
+      <div class="c-name"><span data-lang="zh" class="show">Descript</span><span data-lang="en">Descript</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">像編輯文件一樣剪輯音視頻，播客製作和視頻編輯神器</span><span data-lang="en">Edit audio/video like a document, podcast and video editing tool</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">播客</span><span data-lang="en">Podcast</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">剪輯</span><span data-lang="en">Edit</span></span>
+      </div>
+    </a>
+
+    <a class="card cat-aud" href="https://murf.ai" target="_blank" data-tags="pro api zh">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=murf.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-pro">PRO</span>
+      <div class="c-name"><span data-lang="zh" class="show">Murf AI</span><span data-lang="en">Murf AI</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">專業 AI 配音工具，120+ 聲音，影片旁白與廣告配音必備</span><span data-lang="en">Professional AI voiceover, 120+ voices, narration and ad dubbing</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">配音</span><span data-lang="en">Voiceover</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">旁白</span><span data-lang="en">Narration</span></span>
+      </div>
+    </a>
+</div></div><div class="section" id="wrt">
+  <div class="sec-head">
+    <div class="sec-left"><div class="sec-ico">✍️</div><div>
+      <div class="sec-title"><span class="acc">WRT</span><span data-lang="zh" class="show">AI 寫作</span><span data-lang="en">AI Writing</span></div>
+      <div class="sec-sub"><span data-lang="zh" class="show">文案 · 翻譯 · 長文生成 · 改寫</span><span data-lang="en">Copywriting · Translation · Long-form · Rewriting</span></div>
+    </div></div>
+    <div class="sec-line"></div>
+    <a class="see-all" href="#"><span data-lang="zh" class="show">查看全部 →</span><span data-lang="en">View All →</span></a>
+  </div><div class="grid">
+
+    <a class="card cat-wrt" href="https://www.jasper.ai" target="_blank" data-tags="hot pro api">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=jasper.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-hot">HOT</span>
+      <div class="c-name"><span data-lang="zh" class="show">Jasper AI</span><span data-lang="en">Jasper AI</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">企業級 AI 寫作，品牌語氣保持一致，行銷文案首選工具</span><span data-lang="en">Enterprise AI writing, brand voice consistency, top marketing copy tool</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">文案</span><span data-lang="en">Copywriting</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">行銷</span><span data-lang="en">Marketing</span></span>
+      </div>
+    </a>
+
+    <a class="card cat-wrt" href="https://www.copy.ai" target="_blank" data-tags="free hot api">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=copy.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-free">FREE</span>
+      <div class="c-name"><span data-lang="zh" class="show">Copy.ai</span><span data-lang="en">Copy.ai</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">快速生成行銷文案，90+ 實用模板，支援多語言輸出</span><span data-lang="en">Fast marketing copy generation, 90+ templates, multilingual output</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">文案</span><span data-lang="en">Copy</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">模板</span><span data-lang="en">Templates</span></span>
+      </div>
+    </a>
+
+    <a class="card cat-wrt" href="https://www.grammarly.com" target="_blank" data-tags="hot pro free api">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=grammarly.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-hot">HOT</span>
+      <div class="c-name"><span data-lang="zh" class="show">Grammarly</span><span data-lang="en">Grammarly</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">英文寫作 AI 助手，語法潤色一鍵完成，瀏覽器插件極方便</span><span data-lang="en">English writing AI, grammar and style polish, browser extension</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">英文</span><span data-lang="en">English</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">潤色</span><span data-lang="en">Polish</span></span>
+      </div>
+    </a>
+
+    <a class="card cat-wrt" href="https://www.notion.so/product/ai" target="_blank" data-tags="pro hot zh">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=notion.so&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-pro">PRO</span>
+      <div class="c-name"><span data-lang="zh" class="show">Notion AI</span><span data-lang="en">Notion AI</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">筆記 + AI 一體化，知識管理與 AI 寫作無縫整合</span><span data-lang="en">Notes + AI in one. Knowledge management with seamless AI writing</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">筆記</span><span data-lang="en">Notes</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">知識庫</span><span data-lang="en">Knowledge</span></span>
+      </div>
+    </a>
+
+    <a class="card cat-wrt" href="https://quillbot.com" target="_blank" data-tags="free hot api">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=quillbot.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-free">FREE</span>
+      <div class="c-name"><span data-lang="zh" class="show">QuillBot</span><span data-lang="en">QuillBot</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">AI 改寫利器，7 種寫作風格，論文降重與英文改寫必備</span><span data-lang="en">AI rewriting tool, 7 styles, essential for paraphrasing and essays</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">改寫</span><span data-lang="en">Rewrite</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">降重</span><span data-lang="en">Paraphrase</span></span>
+      </div>
+    </a>
+
+    <a class="card cat-wrt" href="https://www.deepl.com" target="_blank" data-tags="free hot api zh">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=deepl.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-free">FREE</span>
+      <div class="c-name"><span data-lang="zh" class="show">DeepL</span><span data-lang="en">DeepL</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">最自然的 AI 翻譯引擎，超越 Google 翻譯，支援繁體中文</span><span data-lang="en">Most natural AI translation, surpasses Google Translate, supports TC</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">翻譯</span><span data-lang="en">Translation</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">中文</span><span data-lang="en">Chinese</span></span>
+      </div>
+    </a>
+</div></div><div class="section" id="off">
+  <div class="sec-head">
+    <div class="sec-left"><div class="sec-ico">⚡</div><div>
+      <div class="sec-title"><span class="acc">BIZ</span><span data-lang="zh" class="show">辦公效率</span><span data-lang="en">Productivity</span></div>
+      <div class="sec-sub"><span data-lang="zh" class="show">PPT · 會議 · 自動化 · 資料分析</span><span data-lang="en">Slides · Meeting · Automation · Data</span></div>
+    </div></div>
+    <div class="sec-line"></div>
+    <a class="see-all" href="#"><span data-lang="zh" class="show">查看全部 →</span><span data-lang="en">View All →</span></a>
+  </div><div class="grid">
 
     <a class="card cat-off" href="https://gamma.app" target="_blank" data-tags="hot free zh">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=gamma.app&sz=64" alt="Gamma" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">📊</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=gamma.app&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-hot">HOT</span>
-      <div class="c-name">Gamma</div>
-      <div class="c-desc"><span data-lang="zh" class="show">AI 生成簡報，10 分鐘做出專業 PPT，模板精美</span><span data-lang="en">AI-generated presentations. Create a professional deck in 10 minutes</span></div>
-      <div class="c-tags"><span class="c-tag">PPT</span><span class="c-tag"><span data-lang="zh" class="show">簡報</span><span data-lang="en">Slides</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Gamma</span><span data-lang="en">Gamma</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">AI 生成簡報，10 分鐘做出專業 PPT，模板設計精美</span><span data-lang="en">AI-generated presentations. Create a professional deck in 10 minutes</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">PPT</span><span data-lang="en">PPT</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">簡報</span><span data-lang="en">Slides</span></span>
+      </div>
     </a>
 
     <a class="card cat-off" href="https://otter.ai" target="_blank" data-tags="free hot api">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=otter.ai&sz=64" alt="Otter.ai" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🎙️</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=otter.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-free">FREE</span>
-      <div class="c-name">Otter.ai</div>
-      <div class="c-desc"><span data-lang="zh" class="show">會議實時轉錄，自動識別發言人，生成摘要與行動項</span><span data-lang="en">Real-time meeting transcription, speaker detection, auto-summary & action items</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">會議</span><span data-lang="en">Meeting</span></span><span class="c-tag"><span data-lang="zh" class="show">轉錄</span><span data-lang="en">Transcription</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Otter.ai</span><span data-lang="en">Otter.ai</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">會議實時轉錄，自動識別發言人，生成摘要與行動項目</span><span data-lang="en">Real-time meeting transcription, speaker detection, auto-summary</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">會議</span><span data-lang="en">Meeting</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">轉錄</span><span data-lang="en">Transcript</span></span>
+      </div>
     </a>
 
     <a class="card cat-off" href="https://make.com" target="_blank" data-tags="pro hot api">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=make.com&sz=64" alt="Make.com" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">⚙️</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=make.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-pro">PRO</span>
-      <div class="c-name">Make.com</div>
-      <div class="c-desc"><span data-lang="zh" class="show">零程式碼 AI 自動化，串聯所有工具，構建業務流程</span><span data-lang="en">No-code AI automation. Connect all tools and build business workflows</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">自動化</span><span data-lang="en">Automation</span></span><span class="c-tag"><span data-lang="zh" class="show">流程</span><span data-lang="en">Workflow</span></span></div>
-    </a>
-
-    <a class="card cat-off" href="https://www.notion.so/product/ai" target="_blank" data-tags="pro hot zh">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=notion.so&sz=64" alt="Notion AI" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">📝</div>
+      <div class="c-name"><span data-lang="zh" class="show">Make.com</span><span data-lang="en">Make.com</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">零程式碼 AI 自動化，串聯所有工具，構建業務自動化流程</span><span data-lang="en">No-code AI automation, connect all tools, build business workflows</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">自動化</span><span data-lang="en">Automation</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">流程</span><span data-lang="en">Workflow</span></span>
       </div>
-      <span class="badge badge-pro">PRO</span>
-      <div class="c-name">Notion AI</div>
-      <div class="c-desc"><span data-lang="zh" class="show">筆記+AI 一體，知識管理、AI 寫作、項目管理全包</span><span data-lang="en">Notes + AI in one. Knowledge management, AI writing, project management</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">筆記</span><span data-lang="en">Notes</span></span><span class="c-tag"><span data-lang="zh" class="show">知識庫</span><span data-lang="en">Knowledge</span></span></div>
     </a>
 
     <a class="card cat-off" href="https://copilot.microsoft.com" target="_blank" data-tags="pro hot api zh">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" alt="Microsoft Copilot" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🪟</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=microsoft.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-pro">PRO</span>
-      <div class="c-name"><span data-lang="zh" class="show">微軟 Copilot</span><span data-lang="en">Microsoft Copilot</span></div>
-      <div class="c-desc"><span data-lang="zh" class="show">Office 全家桶 AI 化，Word/Excel/PPT 智能助手</span><span data-lang="en">AI-powered Office suite — smart assistant for Word, Excel & PowerPoint</span></div>
-      <div class="c-tags"><span class="c-tag">Office</span><span class="c-tag"><span data-lang="zh" class="show">企業</span><span data-lang="en">Enterprise</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">微軟 Copilot</span><span data-lang="en">MS Copilot</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">Office 全家桶 AI 化，Word/Excel/PPT 智能助手，企業首選</span><span data-lang="en">AI-powered Office suite, smart assistant for all Office apps</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">Office</span><span data-lang="en">Office</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">企業</span><span data-lang="en">Enterprise</span></span>
+      </div>
     </a>
 
     <a class="card cat-off" href="https://zapier.com" target="_blank" data-tags="free hot api">
-      <div class="card-logo-wrap">
-        <div class="logo-bg"></div>
-        <img class="tool-logo" src="https://www.google.com/s2/favicons?domain=zapier.com&sz=64" alt="Zapier" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="logo-fallback" style="display:none">🔗</div>
-      </div>
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=zapier.com&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
       <span class="badge badge-free">FREE</span>
-      <div class="c-name">Zapier AI</div>
-      <div class="c-desc"><span data-lang="zh" class="show">AI 工作流自動化，連接 6000+ 應用，免費版可用</span><span data-lang="en">AI workflow automation. Connect 6000+ apps, free plan available</span></div>
-      <div class="c-tags"><span class="c-tag"><span data-lang="zh" class="show">自動化</span><span data-lang="en">Automation</span></span><span class="c-tag"><span data-lang="zh" class="show">整合</span><span data-lang="en">Integration</span></span></div>
+      <div class="c-name"><span data-lang="zh" class="show">Zapier AI</span><span data-lang="en">Zapier AI</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">AI 工作流自動化，連接 6000+ 應用，免費版可用</span><span data-lang="en">AI workflow automation, connect 6000+ apps, free plan available</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">自動化</span><span data-lang="en">Automation</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">整合</span><span data-lang="en">Integration</span></span>
+      </div>
     </a>
 
+    <a class="card cat-off" href="https://fireflies.ai" target="_blank" data-tags="free hot api">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=fireflies.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-free">FREE</span>
+      <div class="c-name"><span data-lang="zh" class="show">Fireflies.ai</span><span data-lang="en">Fireflies.ai</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">AI 會議摘要工具，自動識別行動項目，整合 CRM 系統</span><span data-lang="en">AI meeting summary, auto action items, CRM system integration</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">摘要</span><span data-lang="en">Summary</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">CRM</span><span data-lang="en">CRM</span></span>
+      </div>
+    </a>
+
+    <a class="card cat-off" href="https://mem.ai" target="_blank" data-tags="pro api new">
+      <div class="logo-wrap"><img class="tool-logo" src="https://www.google.com/s2/favicons?domain=mem.ai&sz=128" alt="" onerror="this.src='https://www.google.com/s2/favicons?domain='+this.dataset.d+'&sz=128'" data-d=".com"></div>
+      <span class="badge badge-new">NEW</span>
+      <div class="c-name"><span data-lang="zh" class="show">Mem AI</span><span data-lang="en">Mem AI</span></div>
+      <div class="c-desc"><span data-lang="zh" class="show">AI 個人知識庫，自動分類整理筆記，智能搜索你的想法</span><span data-lang="en">AI personal knowledge base, auto-organize notes, smart search</span></div>
+      <div class="c-tags">
+        <span class="c-tag"><span data-lang="zh" class="show">知識庫</span><span data-lang="en">Knowledge</span></span>
+        <span class="c-tag"><span data-lang="zh" class="show">筆記</span><span data-lang="en">Notes</span></span>
+      </div>
+    </a>
+</div></div>
+<div class="section" id="ranking-section">
+  <div class="sec-head"><div class="sec-left"><div class="sec-ico">🏆</div><div>
+    <div class="sec-title"><span class="acc">TOP</span><span data-lang="zh" class="show">熱門排行榜</span><span data-lang="en">Hot Rankings</span></div>
+    <div class="sec-sub"><span data-lang="zh" class="show">本週使用量最高的 AI 工具</span><span data-lang="en">Most used AI tools this week</span></div>
+  </div></div><div class="sec-line"></div></div>
+  <div class="rank-list">
+    <a class="rank-item" href="https://chat.openai.com" target="_blank"><span class="rank-num">01</span><div class="rank-logo"><img src="https://www.google.com/s2/favicons?domain=openai.com&sz=128" alt=""></div><div style="flex:1"><div class="rank-name">ChatGPT</div><div class="rank-desc"><span data-lang="zh" class="show">全球最廣泛使用的 AI 對話工具</span><span data-lang="en">Most widely used AI chat tool globally</span></div></div><div class="rank-bar-wrap"><div class="rank-bar-bg"><div class="rank-bar-fill" style="width:98%"></div></div><div class="rank-score">98 / 100</div></div></a>
+    <a class="rank-item" href="https://www.midjourney.com" target="_blank"><span class="rank-num">02</span><div class="rank-logo"><img src="https://www.google.com/s2/favicons?domain=midjourney.com&sz=128" alt=""></div><div style="flex:1"><div class="rank-name">Midjourney</div><div class="rank-desc"><span data-lang="zh" class="show">最受歡迎的 AI 繪圖工具</span><span data-lang="en">Most popular AI image generation tool</span></div></div><div class="rank-bar-wrap"><div class="rank-bar-bg"><div class="rank-bar-fill" style="width:91%"></div></div><div class="rank-score">91 / 100</div></div></a>
+    <a class="rank-item" href="https://claude.ai" target="_blank"><span class="rank-num">03</span><div class="rank-logo"><img src="https://www.google.com/s2/favicons?domain=anthropic.com&sz=128" alt=""></div><div style="flex:1"><div class="rank-name">Claude</div><div class="rank-desc"><span data-lang="zh" class="show">程式開發者最信賴的 AI 助手</span><span data-lang="en">Most trusted AI assistant among developers</span></div></div><div class="rank-bar-wrap"><div class="rank-bar-bg"><div class="rank-bar-fill" style="width:87%"></div></div><div class="rank-score">87 / 100</div></div></a>
+    <a class="rank-item" href="https://cursor.sh" target="_blank"><span class="rank-num">04</span><div class="rank-logo"><img src="https://www.google.com/s2/favicons?domain=cursor.com&sz=128" alt=""></div><div style="flex:1"><div class="rank-name">Cursor</div><div class="rank-desc"><span data-lang="zh" class="show">成長最快的 AI 程式碼編輯器</span><span data-lang="en">Fastest growing AI code editor</span></div></div><div class="rank-bar-wrap"><div class="rank-bar-bg"><div class="rank-bar-fill" style="width:82%"></div></div><div class="rank-score">82 / 100</div></div></a>
+    <a class="rank-item" href="https://elevenlabs.io" target="_blank"><span class="rank-num">05</span><div class="rank-logo"><img src="https://www.google.com/s2/favicons?domain=elevenlabs.io&sz=128" alt=""></div><div style="flex:1"><div class="rank-name">ElevenLabs</div><div class="rank-desc"><span data-lang="zh" class="show">語音克隆技術最先進的 AI 工具</span><span data-lang="en">Most advanced AI voice cloning technology</span></div></div><div class="rank-bar-wrap"><div class="rank-bar-bg"><div class="rank-bar-fill" style="width:78%"></div></div><div class="rank-score">78 / 100</div></div></a>
   </div>
 </div>
-
+<div class="section" id="new-section">
+  <div class="sec-head"><div class="sec-left"><div class="sec-ico">✨</div><div>
+    <div class="sec-title"><span class="acc">NEW</span><span data-lang="zh" class="show">本週新增工具</span><span data-lang="en">Latest Tools</span></div>
+    <div class="sec-sub"><span data-lang="zh" class="show">最新收錄，2025年5月更新</span><span data-lang="en">Newly added, May 2025</span></div>
+  </div></div><div class="sec-line"></div></div>
+  <div class="new-grid">
+    <a class="new-item" href="https://bolt.new" target="_blank"><div class="new-logo"><img src="https://www.google.com/s2/favicons?domain=bolt.new&sz=128" alt=""></div><div><div class="new-name">Bolt.new</div><div class="new-desc"><span data-lang="zh" class="show">自然語言全端開發，10 分鐘做出 Web 應用</span><span data-lang="en">Natural language full-stack dev in 10 minutes</span></div><div class="new-date">2025-05-01 · AI編程</div></div></a>
+    <a class="new-item" href="https://gemini.google.com" target="_blank"><div class="new-logo"><img src="https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06.png" alt=""></div><div><div class="new-name">Gemini 2.5 Pro</div><div class="new-desc"><span data-lang="zh" class="show">Google 最新旗艦，百萬 Token 上下文</span><span data-lang="en">Google's latest flagship with 1M token context</span></div><div class="new-date">2025-04-28 · 大語言模型</div></div></a>
+    <a class="new-item" href="https://veo.google.com" target="_blank"><div class="new-logo"><img src="https://www.google.com/s2/favicons?domain=deepmind.google&sz=128" alt=""></div><div><div class="new-name">Veo 2</div><div class="new-desc"><span data-lang="zh" class="show">Google 電影品質視頻生成，1080p 輸出</span><span data-lang="en">Google cinema-quality video generation, 1080p</span></div><div class="new-date">2025-04-25 · 視頻生成</div></div></a>
+    <a class="new-item" href="https://flux1.ai" target="_blank"><div class="new-logo"><img src="https://www.google.com/s2/favicons?domain=blackforestlabs.ai&sz=128" alt=""></div><div><div class="new-name">Flux 1.1 Pro</div><div class="new-desc"><span data-lang="zh" class="show">新世代圖像模型，真實感超越 Midjourney</span><span data-lang="en">Next-gen image model, realism surpassing Midjourney</span></div><div class="new-date">2025-04-22 · AI繪圖</div></div></a>
+    <a class="new-item" href="https://www.recraft.ai" target="_blank"><div class="new-logo"><img src="https://www.google.com/s2/favicons?domain=recraft.ai&sz=128" alt=""></div><div><div class="new-name">Recraft</div><div class="new-desc"><span data-lang="zh" class="show">向量圖 + 品牌設計 AI，風格一致性超強</span><span data-lang="en">Vector + brand design AI with perfect consistency</span></div><div class="new-date">2025-04-18 · AI繪圖</div></div></a>
+    <a class="new-item" href="https://mistral.ai" target="_blank"><div class="new-logo"><img src="https://www.google.com/s2/favicons?domain=mistral.ai&sz=128" alt=""></div><div><div class="new-name">Mistral Large</div><div class="new-desc"><span data-lang="zh" class="show">歐洲最強開源模型，隱私保護優先</span><span data-lang="en">Europe's strongest open-source model, privacy-first</span></div><div class="new-date">2025-04-15 · 大語言模型</div></div></a>
+  </div>
+</div>
 </div><!-- /container -->
-
-<!-- ══ FOOTER ══ -->
 <div class="footer-wrap">
-  <div class="f-brand"><span>AINAV</span> · <span data-lang="zh" class="show">AI 工具索引站 · 收錄全球優質 AI 應用</span><span data-lang="en">AI Tools Navigator · Curated Global AI Apps</span></div>
+  <div class="f-brand"><span>AINAV</span> · <span data-lang="zh" class="show">AI 工具索引站 · 收錄全球頂尖 AI 應用</span><span data-lang="en">AI Tools Navigator · Curated Global AI Apps</span></div>
   <div class="f-links">
     <a href="#"><span data-lang="zh" class="show">關於我們</span><span data-lang="en">About</span></a>
     <a href="#"><span data-lang="zh" class="show">提交工具</span><span data-lang="en">Submit</span></a>
@@ -1012,215 +1154,245 @@ nav a.active{color:var(--amber);}
   </div>
   <div class="f-right">© 2025 AINAV · <span data-lang="zh" class="show">每日持續更新</span><span data-lang="en">Updated Daily</span></div>
 </div>
-
 <script>
-// ═══════════════════════════════════
-// HERO CANVAS — 粒子網絡 + 互動
-// ═══════════════════════════════════
+// BG CANVAS
 (function(){
-  const canvas = document.getElementById('hero-canvas');
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let W,H,pts;
-  const COLS=['rgba(34,211,238,','rgba(167,139,250,','rgba(245,166,35,','rgba(96,165,250,','rgba(244,114,182,'];
-
-  function resize(){
-    W = canvas.width  = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
+  const c=document.getElementById('bg-canvas');if(!c)return;
+  const x=c.getContext('2d');let W,H,pts;
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  function init(){pts=[];const n=Math.min(Math.floor(W*H/14000),60);
+    for(let i=0;i<n;i++)pts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*.8+.2,vx:(Math.random()-.5)*.18,vy:(Math.random()-.5)*.18,a:Math.random()*.2+.04,col:['rgba(0,217,255,','rgba(30,144,255,','rgba(124,77,255,'][Math.floor(Math.random()*3)],ph:Math.random()*Math.PI*2,ps:.006+Math.random()*.008});}
   }
-
-  function init(){
-    pts = [];
-    const n = Math.min(Math.floor(W*H/4000), 120);
-    for(let i=0;i<n;i++){
-      pts.push({
-        x:Math.random()*W, y:Math.random()*H,
-        r:Math.random()*2+0.4,
-        vx:(Math.random()-.5)*.35, vy:(Math.random()-.5)*.35,
-        a:Math.random()*.6+.1,
-        col:COLS[Math.floor(Math.random()*COLS.length)],
-        ph:Math.random()*Math.PI*2,
-        ps:.015+Math.random()*.02,
-        size:Math.random()>.85?3:1.5
-      });
-    }
-  }
-
-  function drawLine(a,b){
-    const dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
-    if(d>130)return;
-    const alpha=(1-d/130)*.12;
-    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
-    ctx.strokeStyle=`rgba(245,166,35,${alpha})`;ctx.lineWidth=.5;ctx.stroke();
-  }
-
-  // 掃光環
-  let rings=[];
-  function addRing(){
-    rings.push({x:Math.random()*W,y:Math.random()*H,r:0,maxR:80+Math.random()*60,a:.4});
-    setTimeout(addRing,2500+Math.random()*2500);
-  }
-
-  function tick(){
-    ctx.clearRect(0,0,W,H);
-
-    // 環形波
-    rings=rings.filter(ring=>{
-      ring.r+=1.2; ring.a*=.97;
-      if(ring.a<.01)return false;
-      ctx.beginPath();ctx.arc(ring.x,ring.y,ring.r,0,Math.PI*2);
-      ctx.strokeStyle=`rgba(245,166,35,${ring.a*.3})`;ctx.lineWidth=1;ctx.stroke();
-      return ring.r<ring.maxR;
-    });
-
-    pts.forEach((p,i)=>{
-      p.ph+=p.ps;
-      const a=p.a*(0.5+0.5*Math.sin(p.ph));
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.size,0,Math.PI*2);
-      ctx.fillStyle=p.col+a+')';ctx.fill();
-      p.x+=p.vx;p.y+=p.vy;
-      if(p.x<0)p.x=W;if(p.x>W)p.x=0;
-      if(p.y<0)p.y=H;if(p.y>H)p.y=0;
-      for(let j=i+1;j<pts.length;j++) drawLine(p,pts[j]);
-    });
-
-    // 流星
-    requestAnimationFrame(tick);
-  }
-
-  // 流星效果
-  function meteor(){
-    const sx=Math.random()*W*.6, sy=Math.random()*H*.4;
-    const len=80+Math.random()*60;
-    let t=0;
-    const col=COLS[Math.floor(Math.random()*COLS.length)];
-    function drawM(){
-      if(t>1)return;
-      ctx.save();
-      const g=ctx.createLinearGradient(sx+t*200,sy+t*60,sx+t*200+len,sy+t*60+len*.3);
-      g.addColorStop(0,col+'0)');
-      g.addColorStop(.4,col+'.7)');
-      g.addColorStop(1,col+'0)');
-      ctx.strokeStyle=g;ctx.lineWidth=1.5;
-      ctx.beginPath();ctx.moveTo(sx+t*200,sy+t*60);ctx.lineTo(sx+t*200+len,sy+t*60+len*.3);ctx.stroke();
-      ctx.restore();
-      t+=.04;
-      requestAnimationFrame(drawM);
-    }
-    drawM();
-    setTimeout(meteor,2000+Math.random()*3000);
-  }
-
-  // 滑鼠互動
-  const hero=document.querySelector('.hero');
-  let mx=-999,my=-999;
-  hero.addEventListener('mousemove',e=>{
-    const r=canvas.getBoundingClientRect();
-    mx=e.clientX-r.left;my=e.clientY-r.top;
-    pts.forEach(p=>{
-      const dx=p.x-mx,dy=p.y-my,d=Math.sqrt(dx*dx+dy*dy);
-      if(d<90){
-        p.vx+=dx/d*.12;p.vy+=dy/d*.12;
-        const spd=Math.sqrt(p.vx*p.vx+p.vy*p.vy);
-        if(spd>1.8){p.vx*=.85;p.vy*=.85;}
-      }
-    });
-    // 點擊點光環
-  });
-  hero.addEventListener('click',e=>{
-    const r=canvas.getBoundingClientRect();
-    rings.push({x:e.clientX-r.left,y:e.clientY-r.top,r:0,maxR:120,a:.8});
-  });
-
-  window.addEventListener('resize',()=>{resize();init();});
-  resize();init();tick();
-  setTimeout(addRing,1000);
-  setTimeout(meteor,1500);
+  function tick(){x.clearRect(0,0,W,H);
+    pts.forEach((p,i)=>{p.ph+=p.ps;const a=p.a*(0.5+0.5*Math.sin(p.ph));x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=p.col+a+')';x.fill();p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      for(let j=i+1;j<pts.length;j++){const dx=p.x-pts[j].x,dy=p.y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<150){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(pts[j].x,pts[j].y);x.strokeStyle='rgba(0,217,255,'+(1-d/150)*.05+')';x.lineWidth=.5;x.stroke();}}
+    });requestAnimationFrame(tick);}
+  window.addEventListener('resize',()=>{resize();init();});resize();init();tick();
 })();
 
-// ═══════════════════════════════════
-// LANGUAGE SWITCHER
-// ═══════════════════════════════════
-let lang='zh';
-const I18N={
-  zh:{search:'搜尋 AI 工具...'},
-  en:{search:'Search AI tools...'}
-};
+// HERO CANVAS
+(function(){
+  const c=document.getElementById('hero-canvas');if(!c)return;
+  const x=c.getContext('2d');let W,H,pts,rings=[];
+  const COLS=['rgba(0,217,255,','rgba(30,144,255,','rgba(124,77,255,','rgba(0,255,136,','rgba(255,170,0,'];
+  function resize(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;}
+  function init(){pts=[];const n=Math.min(Math.floor(W*H/3200),180);
+    for(let i=0;i<n;i++)pts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2.2+.4,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,a:Math.random()*.65+.1,col:COLS[Math.floor(Math.random()*COLS.length)],ph:Math.random()*Math.PI*2,ps:.018+Math.random()*.025,big:Math.random()>.88});}
+  }
+  function addRing(){rings.push({x:W*.25+Math.random()*W*.5,y:H*.2+Math.random()*H*.6,r:0,max:60+Math.random()*90,a:.55});setTimeout(addRing,2000+Math.random()*2500);}
+  function meteor(){
+    const sx=Math.random()*W*.6,sy=Math.random()*H*.42;
+    const col=COLS[Math.floor(Math.random()*3)];let t=0;const len=80+Math.random()*80;
+    function draw(){if(t>1)return;x.save();const g=x.createLinearGradient(sx+t*240,sy+t*75,sx+t*240+len,sy+t*75+len*.36);g.addColorStop(0,col+'0)');g.addColorStop(.45,col+'.85)');g.addColorStop(1,col+'0)');x.strokeStyle=g;x.lineWidth=1.8;x.beginPath();x.moveTo(sx+t*240,sy+t*75);x.lineTo(sx+t*240+len,sy+t*75+len*.36);x.stroke();x.restore();t+=.035;requestAnimationFrame(draw);}
+    draw();setTimeout(meteor,1600+Math.random()*2400);}
+  function tick(){
+    x.clearRect(0,0,W,H);
+    rings=rings.filter(r=>{r.r+=1.4;r.a*=.965;if(r.a<.007)return false;x.beginPath();x.arc(r.x,r.y,r.r,0,Math.PI*2);x.strokeStyle='rgba(0,217,255,'+r.a*.4+')';x.lineWidth=1;x.stroke();return r.r<r.max;});
+    pts.forEach((p,i)=>{
+      p.ph+=p.ps;const a=p.a*(0.5+0.5*Math.sin(p.ph));const sz=p.big?p.r*2.5:p.r;
+      x.beginPath();x.arc(p.x,p.y,sz,0,Math.PI*2);x.fillStyle=p.col+a+')';x.fill();
+      if(p.big){x.beginPath();x.arc(p.x,p.y,sz*2.8,0,Math.PI*2);x.fillStyle=p.col+(a*.1)+')';x.fill();}
+      p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      for(let j=i+1;j<pts.length;j++){const dx=p.x-pts[j].x,dy=p.y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<115){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(pts[j].x,pts[j].y);x.strokeStyle='rgba(0,217,255,'+(1-d/115)*.14+')';x.lineWidth=.5;x.stroke();}}
+    });requestAnimationFrame(tick);}
+  document.querySelector('.hero').addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect();const mx=e.clientX-r.left,my=e.clientY-r.top;
+    pts.forEach(p=>{const dx=p.x-mx,dy=p.y-my,d=Math.sqrt(dx*dx+dy*dy);if(d<100){p.vx+=dx/d*.15;p.vy+=dy/d*.15;const s=Math.sqrt(p.vx*p.vx+p.vy*p.vy);if(s>2.2){p.vx*=.85;p.vy*=.85;}}});});
+  document.querySelector('.hero').addEventListener('click',e=>{const r=c.getBoundingClientRect();rings.push({x:e.clientX-r.left,y:e.clientY-r.top,r:0,max:150,a:1});});
+  window.addEventListener('resize',()=>{resize();init();});resize();init();tick();
+  setTimeout(addRing,700);setTimeout(addRing,1600);setTimeout(meteor,1400);
+})();
 
-function setLang(l){
-  lang=l;
-  document.querySelectorAll('.lang-btn').forEach(b=>{
-    b.classList.toggle('active',
-      (l==='zh'&&b.textContent.trim()==='CN')||
-      (l==='en'&&b.textContent.trim()==='EN')
-    );
+// TOOL DATA
+const TOOLS=[
+  {name:'Claude',url:'https://claude.ai',domain:'claude.ai',cat:'大語言模型',kw:'claude anthropic 對話 推理 程式 分析 長文本 coding reasoning chat'},
+  {name:'ChatGPT',url:'https://chat.openai.com',domain:'chat.openai.com',cat:'大語言模型',kw:'chatgpt openai gpt4 多模態 插件 multimodal plugins'},
+  {name:'Gemini 2.5',url:'https://gemini.google.com',domain:'gemini.google.com',cat:'大語言模型',kw:'gemini google deepmind 長文本 多模態 long context'},
+  {name:'DeepSeek',url:'https://www.google.com/s2/favicons?domain=deepseek.com&sz=128',domain:'deepseek.com',cat:'大語言模型',kw:'deepseek 國產 開源 推理 數學 程式 open source'},
+  {name:'Kimi',url:'https://www.kimi.ai',domain:'kimi.ai',cat:'大語言模型',kw:'kimi 月之暗面 moonshot 長文本 中文 chinese long context'},
+  {name:'Perplexity',url:'https://www.perplexity.ai',domain:'perplexity.ai',cat:'大語言模型',kw:'perplexity 搜尋 即時 search real-time research'},
+  {name:'豆包 Doubao',url:'https://www.doubao.com',domain:'doubao.com',cat:'大語言模型',kw:'doubao 豆包 字節 bytedance 中文 免費 free chinese'},
+  {name:'Grok 3',url:'https://grok.x.ai',domain:'x.ai',cat:'大語言模型',kw:'grok xai twitter x 推理 即時 real-time reasoning'},
+  {name:'通義千問 Qwen',url:'https://qwen.aliyun.com',domain:'qwen.aliyun.com',cat:'大語言模型',kw:'通義千問 qwen 阿里 alibaba 開源 中文 open source'},
+  {name:'Llama 3.3',url:'https://www.llama.com',domain:'llama.com',cat:'大語言模型',kw:'llama meta 開源 本地 local open source'},
+  {name:'Mistral',url:'https://mistral.ai',domain:'mistral.ai',cat:'大語言模型',kw:'mistral 歐洲 開源 隱私 open source privacy'},
+  {name:'文心一言 ERNIE',url:'https://yiyan.baidu.com',domain:'baidu.com',cat:'大語言模型',kw:'文心一言 ernie 百度 baidu 中文 chinese'},
+  {name:'Midjourney',url:'https://www.midjourney.com',domain:'midjourney.com',cat:'AI繪圖',kw:'midjourney mj 文生圖 藝術 商業 art design image generation'},
+  {name:'Stable Diffusion',url:'https://stability.ai',domain:'stability.ai',cat:'AI繪圖',kw:'stable diffusion sd 開源 本地 open source local'},
+  {name:'Adobe Firefly',url:'https://firefly.adobe.com',domain:'adobe.com',cat:'AI繪圖',kw:'adobe firefly 版權 photoshop ps commercial copyright'},
+  {name:'Ideogram 2',url:'https://ideogram.ai',domain:'ideogram.ai',cat:'AI繪圖',kw:'ideogram 文字 排版 typography design text rendering'},
+  {name:'Leonardo AI',url:'https://leonardo.ai',domain:'leonardo.ai',cat:'AI繪圖',kw:'leonardo 免費 遊戲 free game art'},
+  {name:'Canva AI',url:'https://www.canva.com',domain:'canva.com',cat:'AI繪圖',kw:'canva 設計 模板 design template 中文'},
+  {name:'Flux AI',url:'https://flux1.ai',domain:'flux1.ai',cat:'AI繪圖',kw:'flux 真實感 新世代 realistic next-gen'},
+  {name:'Recraft',url:'https://www.recraft.ai',domain:'recraft.ai',cat:'AI繪圖',kw:'recraft 向量 品牌 vector brand design'},
+  {name:'Playground AI',url:'https://playground.com',domain:'playground.com',cat:'AI繪圖',kw:'playground 免費 社群 free community'},
+  {name:'GitHub Copilot',url:'https://github.com/features/copilot',domain:'github.com',cat:'AI編程',kw:'copilot github 補全 ide completion coding'},
+  {name:'Cursor',url:'https://cursor.sh',domain:'cursor.sh',cat:'AI編程',kw:'cursor 編輯器 editor 對話 chat coding'},
+  {name:'Bolt.new',url:'https://bolt.new',domain:'bolt.new',cat:'AI編程',kw:'bolt 全端 full-stack web app development'},
+  {name:'v0.dev',url:'https://v0.dev',domain:'v0.dev',cat:'AI編程',kw:'v0 vercel 前端 react frontend ui'},
+  {name:'Windsurf',url:'https://codeium.com/windsurf',domain:'codeium.com',cat:'AI編程',kw:'windsurf codeium 免費 free ide coding'},
+  {name:'Replit Agent',url:'https://www.replit.com',domain:'replit.com',cat:'AI編程',kw:'replit 線上 online 協作 collab coding'},
+  {name:'Continue.dev',url:'https://continue.dev',domain:'continue.dev',cat:'AI編程',kw:'continue 開源 open source vscode ide'},
+  {name:'Aider',url:'https://aider.chat',domain:'aider.chat',cat:'AI編程',kw:'aider 終端機 terminal git 開源 open source'},
+  {name:'Sora',url:'https://sora.com',domain:'sora.com',cat:'視頻生成',kw:'sora openai 文生視頻 text-to-video 60秒 60s'},
+  {name:'Runway Gen-3',url:'https://runwayml.com',domain:'runwayml.com',cat:'視頻生成',kw:'runway 電影 cinematic 專業 professional video'},
+  {name:'HeyGen',url:'https://www.heygen.com',domain:'heygen.com',cat:'視頻生成',kw:'heygen 數字人 avatar 配音 voiceover marketing'},
+  {name:'Pika 2.2',url:'https://pika.art',domain:'pika.art',cat:'視頻生成',kw:'pika 短片 short 動畫 animation video'},
+  {name:'可靈 Kling AI',url:'https://kling.kuaishou.com',domain:'kling.ai',cat:'視頻生成',kw:'kling 可靈 快手 kuaishou 國產 免費 chinese free'},
+  {name:'海螺 Hailuo AI',url:'https://hailuoai.com',domain:'hailuoai.com',cat:'視頻生成',kw:'hailuo 海螺 minimax 中文 免費 chinese free'},
+  {name:'Luma Dream Machine',url:'https://lumalabs.ai',domain:'lumalabs.ai',cat:'視頻生成',kw:'luma dream 圖生視頻 image-to-video 3d physics'},
+  {name:'Veo 2',url:'https://veo.google.com',domain:'google.com',cat:'視頻生成',kw:'veo google deepmind 電影 1080p cinema'},
+  {name:'ElevenLabs',url:'https://elevenlabs.io',domain:'elevenlabs.io',cat:'語音音頻',kw:'elevenlabs 語音克隆 voice clone 配音 podcast'},
+  {name:'Suno AI',url:'https://suno.com',domain:'suno.com',cat:'語音音頻',kw:'suno 作曲 music compose 音樂 免費 free'},
+  {name:'Udio',url:'https://www.udio.com',domain:'udio.com',cat:'語音音頻',kw:'udio 音樂 music 高品質 high quality'},
+  {name:'Whisper',url:'https://openai.com/research/whisper',domain:'openai.com',cat:'語音音頻',kw:'whisper openai 語音轉文字 speech-to-text 開源 open source'},
+  {name:'Descript',url:'https://www.descript.com',domain:'descript.com',cat:'語音音頻',kw:'descript 播客 podcast 剪輯 edit audio video'},
+  {name:'Murf AI',url:'https://murf.ai',domain:'murf.ai',cat:'語音音頻',kw:'murf 配音 voiceover 旁白 narration'},
+  {name:'Jasper AI',url:'https://www.jasper.ai',domain:'jasper.ai',cat:'AI寫作',kw:'jasper 文案 copywriting 行銷 marketing'},
+  {name:'Copy.ai',url:'https://www.copy.ai',domain:'copy.ai',cat:'AI寫作',kw:'copy.ai 文案 copywriting 模板 template'},
+  {name:'Grammarly',url:'https://www.grammarly.com',domain:'grammarly.com',cat:'AI寫作',kw:'grammarly 英文 english 語法 grammar polish'},
+  {name:'Notion AI',url:'https://www.notion.so/product/ai',domain:'notion.so',cat:'AI寫作',kw:'notion 筆記 notes 知識庫 knowledge wiki'},
+  {name:'QuillBot',url:'https://quillbot.com',domain:'quillbot.com',cat:'AI寫作',kw:'quillbot 改寫 rewrite 降重 paraphrase'},
+  {name:'DeepL',url:'https://www.deepl.com',domain:'deepl.com',cat:'AI寫作',kw:'deepl 翻譯 translation 中文 chinese'},
+  {name:'Gamma',url:'https://gamma.app',domain:'gamma.app',cat:'辦公效率',kw:'gamma ppt 簡報 slides presentation'},
+  {name:'Otter.ai',url:'https://otter.ai',domain:'otter.ai',cat:'辦公效率',kw:'otter 會議 meeting 轉錄 transcript summary'},
+  {name:'Make.com',url:'https://make.com',domain:'make.com',cat:'辦公效率',kw:'make 自動化 automation 流程 workflow'},
+  {name:'Microsoft Copilot',url:'https://copilot.microsoft.com',domain:'microsoft.com',cat:'辦公效率',kw:'copilot microsoft office word excel ppt'},
+  {name:'Zapier AI',url:'https://zapier.com',domain:'zapier.com',cat:'辦公效率',kw:'zapier 自動化 automation 整合 integration'},
+  {name:'Fireflies.ai',url:'https://fireflies.ai',domain:'fireflies.ai',cat:'辦公效率',kw:'fireflies 會議 meeting 摘要 summary crm'},
+  {name:'Mem AI',url:'https://mem.ai',domain:'mem.ai',cat:'辦公效率',kw:'mem 知識庫 knowledge 筆記 notes ai'},
+];
+
+// SEARCH
+const si=document.getElementById('si');
+const sdrop=document.getElementById('sdrop');
+let st;
+
+function hl(text,q){
+  if(!q||!text)return text;
+  try{return text.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>');}catch(e){return text;}
+}
+
+
+function getLogo(domain){
+  const M={
+    'claude.ai':'https://www.google.com/s2/favicons?domain=openai.com&sz=128',
+    'chat.openai.com':'https://www.google.com/s2/favicons?domain=openai.com&sz=128',
+    'gemini.google.com':'https://www.google.com/s2/favicons?domain=openai.com&sz=128',
+    'deepseek.com':'https://www.google.com/s2/favicons?domain=deepseek.com&sz=128',
+    'kimi.ai':'https://www.google.com/s2/favicons?domain=kimi.ai&sz=128',
+    'perplexity.ai':'https://www.google.com/s2/favicons?domain=perplexity.ai&sz=128',
+    'doubao.com':'https://www.google.com/s2/favicons?domain=doubao.com&sz=128',
+    'x.ai':'https://www.google.com/s2/favicons?domain=x.ai&sz=128',
+    'qwen.aliyun.com':'https://www.google.com/s2/favicons?domain=tongyi.aliyun.com&sz=128',
+    'llama.com':'https://www.google.com/s2/favicons?domain=meta.ai&sz=128',
+    'mistral.ai':'https://www.google.com/s2/favicons?domain=mistral.ai&sz=128',
+    'baidu.com':'https://www.google.com/s2/favicons?domain=yiyan.baidu.com&sz=128',
+    'midjourney.com':'https://www.google.com/s2/favicons?domain=midjourney.com&sz=128',
+    'stability.ai':'https://www.google.com/s2/favicons?domain=stability.ai&sz=128',
+    'adobe.com':'https://www.google.com/s2/favicons?domain=adobe.com&sz=128',
+    'ideogram.ai':'https://www.google.com/s2/favicons?domain=ideogram.ai&sz=128',
+    'leonardo.ai':'https://www.google.com/s2/favicons?domain=leonardo.ai&sz=128',
+    'canva.com':'https://www.google.com/s2/favicons?domain=canva.com&sz=128',
+    'flux1.ai':'https://www.google.com/s2/favicons?domain=blackforestlabs.ai&sz=128',
+    'recraft.ai':'https://www.google.com/s2/favicons?domain=recraft.ai&sz=128',
+    'playground.com':'https://www.google.com/s2/favicons?domain=playground.com&sz=128',
+    'github.com':'https://www.google.com/s2/favicons?domain=github.com&sz=128',
+    'cursor.sh':'https://www.google.com/s2/favicons?domain=cursor.com&sz=128',
+    'bolt.new':'https://www.google.com/s2/favicons?domain=bolt.new&sz=128',
+    'v0.dev':'https://www.google.com/s2/favicons?domain=v0.dev&sz=128',
+    'codeium.com':'https://www.google.com/s2/favicons?domain=windsurf.com&sz=128',
+    'replit.com':'https://www.google.com/s2/favicons?domain=replit.com&sz=128',
+    'continue.dev':'https://www.google.com/s2/favicons?domain=continue.dev&sz=128',
+    'aider.chat':'https://www.google.com/s2/favicons?domain=aider.chat&sz=128',
+    'sora.com':'https://www.google.com/s2/favicons?domain=openai.com&sz=128',
+    'runwayml.com':'https://www.google.com/s2/favicons?domain=runwayml.com&sz=128',
+    'heygen.com':'https://www.google.com/s2/favicons?domain=heygen.com&sz=128',
+    'pika.art':'https://www.google.com/s2/favicons?domain=pika.art&sz=128',
+    'kling.ai':'https://www.google.com/s2/favicons?domain=kling.kuaishou.com&sz=128',
+    'hailuoai.com':'https://www.google.com/s2/favicons?domain=hailuoai.com&sz=128',
+    'lumalabs.ai':'https://www.google.com/s2/favicons?domain=lumalabs.ai&sz=128',
+    'google.com':'https://www.google.com/s2/favicons?domain=deepmind.google&sz=128',
+    'elevenlabs.io':'https://www.google.com/s2/favicons?domain=elevenlabs.io&sz=128',
+    'suno.com':'https://www.google.com/s2/favicons?domain=suno.com&sz=128',
+    'udio.com':'https://www.google.com/s2/favicons?domain=udio.com&sz=128',
+    'openai.com':'https://www.google.com/s2/favicons?domain=openai.com&sz=128',
+    'descript.com':'https://www.google.com/s2/favicons?domain=descript.com&sz=128',
+    'murf.ai':'https://www.google.com/s2/favicons?domain=murf.ai&sz=128',
+    'jasper.ai':'https://www.google.com/s2/favicons?domain=jasper.ai&sz=128',
+    'copy.ai':'https://www.google.com/s2/favicons?domain=copy.ai&sz=128',
+    'grammarly.com':'https://www.google.com/s2/favicons?domain=grammarly.com&sz=128',
+    'notion.so':'https://www.google.com/s2/favicons?domain=notion.so&sz=128',
+    'quillbot.com':'https://www.google.com/s2/favicons?domain=quillbot.com&sz=128',
+    'deepl.com':'https://www.google.com/s2/favicons?domain=deepl.com&sz=128',
+    'gamma.app':'https://www.google.com/s2/favicons?domain=gamma.app&sz=128',
+    'otter.ai':'https://www.google.com/s2/favicons?domain=otter.ai&sz=128',
+    'make.com':'https://www.google.com/s2/favicons?domain=make.com&sz=128',
+    'microsoft.com':'https://www.google.com/s2/favicons?domain=microsoft.com&sz=128',
+    'zapier.com':'https://www.google.com/s2/favicons?domain=zapier.com&sz=128',
+    'fireflies.ai':'https://www.google.com/s2/favicons?domain=fireflies.ai&sz=128',
+    'mem.ai':'https://www.google.com/s2/favicons?domain=mem.ai&sz=128',
+  };
+  return M[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=64');
+}
+function renderDrop(q){
+  if(!q){sdrop.style.display='none';return;}
+  const res=TOOLS.filter(t=>(t.name+t.cat+t.kw).toLowerCase().includes(q));
+  if(!res.length){sdrop.innerHTML='<div class="sd-empty"><strong>🔍 無結果</strong><span>找不到「'+q+'」相關工具</span></div>';sdrop.style.display='block';return;}
+  const grps={};res.forEach(t=>{if(!grps[t.cat])grps[t.cat]=[];grps[t.cat].push(t);});
+  let html='<div class="sd-hdr"><span class="sd-hdr-txt">找到 <strong>'+res.length+'</strong> 個結果</span><button class="sd-clear" onclick="clearSrc()">✕ 清除</button></div>';
+  Object.entries(grps).forEach(([cat,items])=>{
+    html+='<div class="sd-cat">'+cat+'</div>';
+    items.forEach(t=>{
+      html+='<a class="sd-item" href="'+t.url+'" target="_blank"><div class="sd-logo-w"><img src="https://www.google.com/s2/favicons?domain='+t.domain+'&sz=128" alt="" onerror="this.style.display='none'"></div><div style="flex:1;min-width:0"><div class="sd-name">'+hl(t.name,q)+'</div></div><span class="sd-cat-badge">'+cat+'</span></a>';
+    });
   });
+  sdrop.innerHTML=html;sdrop.style.display='block';
+}
+
+function execSearch(){
+  const q=si.value.toLowerCase().trim();if(!q){clearSrc();return;}
+  renderDrop(q);
+  document.querySelectorAll('.card').forEach(c=>{
+    if(c.textContent.toLowerCase().includes(q)){c.classList.add('sd-highlight');setTimeout(()=>c.classList.remove('sd-highlight'),2500);}
+  });
+}
+function clearSrc(){si.value='';sdrop.style.display='none';}
+si.addEventListener('input',function(){clearTimeout(st);const q=this.value.toLowerCase().trim();if(!q){sdrop.style.display='none';return;}st=setTimeout(()=>renderDrop(q),180);});
+si.addEventListener('keydown',e=>{if(e.key==='Enter')execSearch();if(e.key==='Escape')clearSrc();if(e.key==='ArrowDown'){const f=sdrop.querySelector('.sd-item');if(f)f.focus();e.preventDefault();}});
+document.addEventListener('click',e=>{if(!e.target.closest('.search-outer'))sdrop.style.display='none';});
+document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement.tagName!=='INPUT'){e.preventDefault();si.focus();}});
+
+// LANG
+let lang='zh';
+function setLang(l){lang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',(l==='zh'&&b.textContent==='CN')||(l==='en'&&b.textContent==='EN')));
   document.querySelectorAll('[data-lang]').forEach(el=>el.classList.toggle('show',el.dataset.lang===l));
   document.querySelectorAll('[data-lang-block]').forEach(el=>el.classList.toggle('show',el.dataset.langBlock===l));
-  const si=document.getElementById('si');
-  if(si) si.placeholder=I18N[l].search;
-  document.documentElement.lang=l==='zh'?'zh-TW':'en';
-}
+  si.placeholder=l==='zh'?'搜尋 AI 工具...':'Search AI tools...';
+  document.documentElement.lang=l==='zh'?'zh-TW':'en';}
 setLang('zh');
 
-// ═══════════════════════════════════
 // FILTER
-// ═══════════════════════════════════
 const aC=()=>document.querySelectorAll('.card');
 const aS=()=>document.querySelectorAll('.section');
 const aA=()=>document.querySelectorAll('.mid-ad');
-
-document.querySelectorAll('.ftab').forEach(t=>{
-  t.addEventListener('click',function(){
-    const f=this.dataset.filter;
-    document.querySelectorAll('.ftab').forEach(x=>x.classList.remove('on'));
-    this.classList.add('on');
-    if(f==='all'){aC().forEach(show);aS().forEach(s=>s.style.display='');aA().forEach(a=>a.style.display='');}
-    else{
-      aA().forEach(a=>a.style.display='none');
-      aC().forEach(c=>(c.dataset.tags||'').split(' ').includes(f)?show(c):hide(c));
-      aS().forEach(s=>{s.style.display=s.querySelectorAll('.card:not([data-hidden])').length?'':'none';});
-    }
-  });
-});
+document.querySelectorAll('.ftab').forEach(t=>{t.addEventListener('click',function(){
+  const f=this.dataset.filter;document.querySelectorAll('.ftab').forEach(x=>x.classList.remove('on'));this.classList.add('on');
+  if(f==='all'){aC().forEach(show);aS().forEach(s=>s.style.display='');aA().forEach(a=>a.style.display='');}
+  else{aA().forEach(a=>a.style.display='none');aC().forEach(c=>(c.dataset.tags||'').split(' ').includes(f)?show(c):hide(c));aS().forEach(s=>{s.style.display=s.querySelectorAll('.card:not([data-hidden])').length?'':'none';});}
+});});
 function show(c){delete c.dataset.hidden;c.style.display='';c.style.opacity='1';c.style.transform='';c.style.pointerEvents='auto';c.style.animation='none';requestAnimationFrame(()=>{c.style.animation='';});}
 function hide(c){c.dataset.hidden='1';c.style.display='none';}
 
-// ═══════════════════════════════════
-// SEARCH
-// ═══════════════════════════════════
-const si=document.getElementById('si');
-si.addEventListener('input',function(){
-  const q=this.value.toLowerCase().trim();
-  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('on'));
-  document.querySelector('[data-filter="all"]').classList.add('on');
-  aC().forEach(c=>{delete c.dataset.hidden;c.style.display='';});
-  aS().forEach(s=>s.style.display='');aA().forEach(a=>a.style.display='');
-  if(!q)return;
-  aC().forEach(c=>{
-    const m=c.textContent.toLowerCase().includes(q);
-    c.style.opacity=m?'1':'.1';c.style.transform=m?'':'scale(.97)';c.style.pointerEvents=m?'auto':'none';
-  });
-});
-document.addEventListener('keydown',e=>{
-  if(e.key==='/'&&document.activeElement.tagName!=='INPUT'){e.preventDefault();si.focus();}
-  if(e.key==='Escape'){si.value='';si.dispatchEvent(new Event('input'));}
-});
+// NAV
+function navClick(el){document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));el.classList.add('active');}
 
-// ═══════════════════════════════════
 // RIPPLE
-// ═══════════════════════════════════
-document.querySelectorAll('.card').forEach(card=>{
-  card.addEventListener('click',function(e){
-    if(e.target.tagName==='A'&&e.target!==this)return;
-    const rp=document.createElement('span');
-    const r=this.getBoundingClientRect();
-    rp.style.cssText=`position:absolute;border-radius:50%;background:rgba(245,166,35,.15);width:8px;height:8px;top:${e.clientY-r.top-4}px;left:${e.clientX-r.left-4}px;transform:scale(0);pointer-events:none;transition:transform .5s ease,opacity .5s ease;z-index:10;`;
-    this.appendChild(rp);
-    requestAnimationFrame(()=>{rp.style.transform='scale(35)';rp.style.opacity='0';});
-    setTimeout(()=>rp.remove(),600);
-  });
-});
+document.querySelectorAll('.card').forEach(card=>{card.addEventListener('click',function(e){
+  const rp=document.createElement('span');const r=this.getBoundingClientRect();
+  rp.style.cssText='position:absolute;border-radius:50%;background:rgba(0,217,255,.14);width:8px;height:8px;top:'+(e.clientY-r.top-4)+'px;left:'+(e.clientX-r.left-4)+'px;transform:scale(0);pointer-events:none;transition:transform .5s ease,opacity .5s ease;z-index:10;';
+  this.appendChild(rp);requestAnimationFrame(()=>{rp.style.transform='scale(35)';rp.style.opacity='0';});setTimeout(()=>rp.remove(),600);
+});});
 </script>
-</body>
-</html>
+</body></html>
